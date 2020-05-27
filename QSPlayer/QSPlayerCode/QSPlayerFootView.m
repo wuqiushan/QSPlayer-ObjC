@@ -51,9 +51,24 @@
         make.right.equalTo(self).offset(-5);
         make.height.width.equalTo(@(32));
     }];
+    
+    [self.totalTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.right.equalTo(self.fullScreenButton.mas_left).offset(-5);
+        make.height.equalTo(@(40));
+        make.width.equalTo(@(50));
+    }];
+    
+    [self.buffProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.left.equalTo(self.currentTimeLabel.mas_right).offset(5);
+        make.right.equalTo(self.totalTimeLabel.mas_left).offset(-5);
+        make.height.equalTo(@(3));
+    }];
 }
 
 #pragma mark - 事件处理
+
 - (void)fullScreenAction {
     if (self.fullScreenBlock) {
         self.fullScreenBlock();
@@ -67,6 +82,7 @@
 }
 
 #pragma mark - 懒加载
+
 - (UILabel *)currentTimeLabel {
     if (!_currentTimeLabel) {
         _currentTimeLabel = [[UILabel alloc] init];

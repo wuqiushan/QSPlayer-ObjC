@@ -23,6 +23,43 @@
 @implementation QSPlayerHeadView
 
 
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        [self setupView];
+    }
+    return self;
+}
+
+- (void)setupView {
+    
+    [self addSubview: self.backImageView];
+    [self addSubview: self.titleLabel];
+    [self addSubview: self.shareButton];
+    
+    [self.backImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.left.equalTo(self).offset(5);
+        make.width.height.equalTo(@(32));
+    }];
+    
+    [self.shareButton mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.right.equalTo(self).offset(-5);
+        make.width.height.equalTo(@(32));
+    }];
+    
+    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.left.equalTo(self.backImageView.mas_right).offset(3);
+        make.right.equalTo(self.shareButton.mas_left).offset(-3);
+        make.height.equalTo(@(32));
+    }];
+}
+
+#pragma make - 事件处理
+
 - (void)backAction {
     if (self.backBlock) {
         self.backBlock();
@@ -36,6 +73,7 @@
 }
 
 #pragma mark - 懒加载
+
 - (UIImageView *)backImageView {
     if (!_backImageView) {
         _backImageView = [[UIImageView alloc] init];
