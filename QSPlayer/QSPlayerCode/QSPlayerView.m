@@ -7,6 +7,14 @@
 //
 
 #import "QSPlayerView.h"
+#import "QSPlayerHeadView.h"
+#import "QSPlayerMiddleView.h"
+#import "QSPlayerFootView.h"
+
+@interface QSPlayerView()
+
+
+@end
 
 @implementation QSPlayerView
 

@@ -48,6 +48,7 @@
 		AE004A05247D1EA80084F9E9 /* videoUnLock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE0049F3247D1EA80084F9E9 /* videoUnLock@2x.png */; };
 		AE004A06247D1EA80084F9E9 /* videoUnLock@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE0049F4247D1EA80084F9E9 /* videoUnLock@3x.png */; };
 		AE004A07247D1EA80084F9E9 /* videoShare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE0049F5247D1EA80084F9E9 /* videoShare@2x.png */; };
+		AEDF8076247E73A400E29221 /* QSVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDF8075247E73A400E29221 /* QSVideoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -116,6 +117,8 @@
 		AE0049F3247D1EA80084F9E9 /* videoUnLock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoUnLock@2x.png"; sourceTree = "<group>"; };
 		AE0049F4247D1EA80084F9E9 /* videoUnLock@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoUnLock@3x.png"; sourceTree = "<group>"; };
 		AE0049F5247D1EA80084F9E9 /* videoShare@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoShare@2x.png"; sourceTree = "<group>"; };
+		AEDF8074247E73A400E29221 /* QSVideoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSVideoViewController.h; sourceTree = "<group>"; };
+		AEDF8075247E73A400E29221 /* QSVideoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSVideoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +158,8 @@
 				AE004995247D149D0084F9E9 /* AppDelegate.m */,
 				AE004997247D149D0084F9E9 /* ViewController.h */,
 				AE004998247D149D0084F9E9 /* ViewController.m */,
+				AEDF8074247E73A400E29221 /* QSVideoViewController.h */,
+				AEDF8075247E73A400E29221 /* QSVideoViewController.m */,
 				AE00499A247D149D0084F9E9 /* Main.storyboard */,
 				AE00499D247D149F0084F9E9 /* Assets.xcassets */,
 				AE00499F247D149F0084F9E9 /* LaunchScreen.storyboard */,
@@ -355,6 +360,7 @@
 				AE0049D9247D15E30084F9E9 /* ViewController+MASAdditions.m in Sources */,
 				AE0049B9247D15760084F9E9 /* QSPlayerManage.m in Sources */,
 				AE004996247D149D0084F9E9 /* AppDelegate.m in Sources */,
+				AEDF8076247E73A400E29221 /* QSVideoViewController.m in Sources */,
 				AE0049B0247D15200084F9E9 /* QSPlayerHeadView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
