@@ -12,11 +12,14 @@
 
 @interface QSPlayerFootView()
 
-@property (nonatomic, strong) UILabel        *currentTimeLabel;
-@property (nonatomic, strong) UILabel        *totalTimeLabel;
-@property (nonatomic, strong) UIProgressView *buffProgressView;
-@property (nonatomic, strong) UISlider       *playProgressSlider;
-@property (nonatomic, strong) UIButton       *fullScreenButton;
+@property (nonatomic, readwrite, strong) UILabel        *currentTimeLabel;
+@property (nonatomic, readwrite, strong) UILabel        *totalTimeLabel;
+@property (nonatomic, readwrite, strong) UIProgressView *buffProgressView;
+@property (nonatomic, readwrite, strong) UISlider       *playProgressSlider;
+@property (nonatomic, readwrite, strong) UIButton       *fullScreenButton;
+
+/** 滑块状态 YES:手动滑动中 NO:松开滑动或未滑动 */
+@property (nonatomic, readwrite, assign) BOOL isSliding;
 
 @end
 
@@ -27,6 +30,7 @@
     self = [super init];
     if (self) {
         [self setupView];
+        self.isSliding = NO;
     }
     return self;
 }
@@ -65,6 +69,13 @@
         make.right.equalTo(self.totalTimeLabel.mas_left).offset(-5);
         make.height.equalTo(@(3));
     }];
+    
+    [self.playProgressSlider mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.left.equalTo(self.currentTimeLabel.mas_right).offset(5);
+        make.right.equalTo(self.totalTimeLabel.mas_left).offset(-5);
+        make.height.equalTo(@(3));
+    }];
 }
 
 #pragma mark - 事件处理
@@ -75,10 +86,57 @@
     }
 }
 
-- (void)playSliderAction:(CGFloat) value {
-    if (self.playProgressSlider) {
-        self.playSliderBlock(value);
+// 这里有两个功能，第一个是值拖动值出去，
+// 第二个就是监听是否在拖动，在拖动时，就不再自动设置Slider的值了，因为会有手动和自动两种在操作滑块
+- (void)playSliderAction:(UISlider *)slider {
+    
+    self.isSliding = NO; // 如果有事件产生说明已经松手了
+    
+    if (self.playSliderBlock) {
+        self.playSliderBlock(slider.value);
     }
+}
+
+- (void)playSlidrTouchDown {
+    self.isSliding = YES; // 当滑块有按下时，就标志位，直到松开手
+}
+
+#pragma mark - 开放方法
+/** update缓冲条 */
+- (void)updateBuffProgress:(float)progress {
+    [self.buffProgressView setProgress:progress animated:YES];
+}
+
+/** update播放进度条、当前时间、总时间 */
+- (void)updateCurrentSec:(NSTimeInterval)currentSec totalSec:(NSTimeInterval)totalSec {
+    self.currentTimeLabel.text = [self formatPlayTime:currentSec];
+    self.totalTimeLabel.text   = [self formatPlayTime:totalSec];
+    
+    // 不在拖动滑块时才设置滑块值
+    if (self.isSliding == NO) {
+        [self.playProgressSlider setValue:(float)(currentSec/totalSec) animated:YES];
+    }
+}
+
+/** update全屏与半屏切换的UI */
+- (void)updateFullSceen:(BOOL)full {
+    NSString *imagStr = @"fullScreen";
+    if (full) {
+        imagStr = @"halfScreen";
+    }
+    [self.fullScreenButton setImage:[UIImage imageNamed:imagStr] forState:UIControlStateNormal];
+}
+
+#pragma mark - 时间格式化
+- (NSString *)formatPlayTime:(NSTimeInterval)duration {
+    NSInteger totalSecend = round(duration);
+    NSInteger hour = totalSecend / 3600;
+    NSInteger minute = (totalSecend % 3600) / 60;
+    NSInteger secend = totalSecend % 60;
+    if (hour < 1) {
+        return [NSString stringWithFormat:@"%ld:%02ld", (long)minute, (long)secend];
+    }
+    return [NSString stringWithFormat:@"%ld:%02ld:%02ld", (long)hour, (long)minute, (long)secend];
 }
 
 #pragma mark - 懒加载
@@ -121,14 +179,15 @@
     if (!_playProgressSlider) {
         _playProgressSlider = [[UISlider alloc] init];
         _playProgressSlider.continuous = false;
-        _playProgressSlider.minimumValue = 0;
-        _playProgressSlider.maximumValue = 1;
+        _playProgressSlider.minimumValue = 0.0;
+        _playProgressSlider.maximumValue = 1.0;
         _playProgressSlider.minimumTrackTintColor = [UIColor greenColor];
         _playProgressSlider.maximumTrackTintColor = [UIColor clearColor];
         
         UIImage *thumbImage = [UIImage imageNamed:@"videoPoint"];
         [_playProgressSlider setThumbImage:thumbImage forState:UIControlStateNormal];
         [_playProgressSlider addTarget:self action:@selector(playSliderAction:) forControlEvents:UIControlEventValueChanged];
+        [_playProgressSlider addTarget:self action:@selector(playSlidrTouchDown) forControlEvents:UIControlEventTouchDown];
     }
     return _playProgressSlider;
 }

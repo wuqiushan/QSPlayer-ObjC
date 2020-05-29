@@ -117,6 +117,7 @@
 		AE0049F3247D1EA80084F9E9 /* videoUnLock@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoUnLock@2x.png"; sourceTree = "<group>"; };
 		AE0049F4247D1EA80084F9E9 /* videoUnLock@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoUnLock@3x.png"; sourceTree = "<group>"; };
 		AE0049F5247D1EA80084F9E9 /* videoShare@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoShare@2x.png"; sourceTree = "<group>"; };
+		AE033DAB247FBB0A0048A6A1 /* QSPlayerParam.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSPlayerParam.h; sourceTree = "<group>"; };
 		AEDF8074247E73A400E29221 /* QSVideoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSVideoViewController.h; sourceTree = "<group>"; };
 		AEDF8075247E73A400E29221 /* QSVideoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSVideoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -182,6 +183,7 @@
 				AE0049B5247D15450084F9E9 /* QSPlayerView.m */,
 				AE0049B7247D15760084F9E9 /* QSPlayerManage.h */,
 				AE0049B8247D15760084F9E9 /* QSPlayerManage.m */,
+				AE033DAB247FBB0A0048A6A1 /* QSPlayerParam.h */,
 			);
 			path = QSPlayerCode;
 			sourceTree = "<group>";

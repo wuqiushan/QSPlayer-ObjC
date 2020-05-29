@@ -7,10 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+@class QSPlayerHeadView, QSPlayerMiddleView, QSPlayerFootView;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QSPlayerView : UIView
+
+@property (nonatomic, strong) QSPlayerHeadView   *headView;
+@property (nonatomic, strong) QSPlayerMiddleView *middleView;
+@property (nonatomic, strong) QSPlayerFootView   *footView;
+
+//- (instancetype)init;
+- (void)setupView;
 
 @end
 

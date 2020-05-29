@@ -50,10 +50,10 @@
 - (void)updatePlayUIState:(AVPlayerState)state {
     
     if (state == AVPlayerStatePlaying) {
-        [self.playButton setImage:[UIImage imageNamed:@"videoStop"] forState:UIControlStateNormal];
+        [self.playButton setImage:[UIImage imageNamed:@"videoPlay"] forState:UIControlStateNormal];
     }
     else {
-        [self.playButton setImage:[UIImage imageNamed:@"videoPlay"] forState:UIControlStateNormal];
+        [self.playButton setImage:[UIImage imageNamed:@"videoStop"] forState:UIControlStateNormal];
     }
     /*
     switch (state) {
@@ -114,7 +114,7 @@
 - (UIButton *)playButton {
     if (!_playButton) {
         _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playButton setImage:[UIImage imageNamed:@"videoStop"] forState:UIControlStateNormal];
+        [_playButton setImage:[UIImage imageNamed:@"videoPlay"] forState:UIControlStateNormal];
         [_playButton addTarget:self action:@selector(playAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _playButton;
