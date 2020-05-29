@@ -30,7 +30,7 @@
 //}
 
 - (void)setupView {
-    
+    self.backgroundColor = [UIColor lightGrayColor];
     [self addSubview:self.headView];
     [self addSubview:self.middleView];
     [self addSubview:self.footView];

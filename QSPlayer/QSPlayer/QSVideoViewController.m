@@ -26,4 +26,10 @@
     [self.playerManage initVideoWithUrl:url superView:self.view];
 }
 
+- (void)viewWillLayoutSubviews {
+    
+    [self.playerManage updateSuperView:self.view];
+}
+
+
 @end

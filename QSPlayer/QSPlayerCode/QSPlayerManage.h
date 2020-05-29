@@ -22,6 +22,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)initVideoWithUrl:(NSString *)url superView:(UIView *)superView;
 
+/** 更新布局 */
+- (void)updateSuperView:(UIView *)superView;
+
 @end
 
 NS_ASSUME_NONNULL_END

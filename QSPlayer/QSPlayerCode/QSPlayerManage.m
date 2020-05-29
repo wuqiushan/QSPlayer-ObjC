@@ -15,6 +15,24 @@
 #import "QSPlayerMiddleView.h"
 #import "QSPlayerFootView.h"
 
+#define IOSScreenWidth          ([UIScreen mainScreen].bounds.size.width)
+#define IOSScreenHeight         ([UIScreen mainScreen].bounds.size.height)
+#define IOSScreenRatioW         IOSScreenWidth / 375.0f
+
+#define isIphone5               (IOSScreenWidth == 320.f && IOSScreenHeight == 568.f ? YES : NO)
+#define isIphoneX_XS            (IOSScreenWidth == 375.f && IOSScreenHeight == 812.f ? YES : NO)
+#define isIphoneXR_XSMax        (IOSScreenWidth == 414.f && IOSScreenHeight == 896.f ? YES : NO)
+#define isIphoneXLater          (isIphoneX_XS || isIphoneXR_XSMax)
+#define isHorizontal            (IOSScreenWidth > IOSScreenHeight ? YES : NO)
+
+#define IOSStatusBarHeight      (isIphoneXLater ? 44.f : 20.f)
+#define IOSNavgationBarHeight   44.0f
+#define IOSNavgationTotalHeight (IOSStatusBarHeight + IOSNavgationBarHeight)
+
+#define IOSBottomSafeHeight     (isIphoneXLater ? 34.0f : 0.0f)
+#define IOSTabBarHeight         49.0f
+#define IOSTabBarTotalHeight    (IOSBottomSafeHeight + IOSTabBarHeight)
+
 @interface QSPlayerManage()
 
 @property (nonatomic, strong) AVPlayer      *avPlayer;       /** 播放器 */
@@ -26,7 +44,8 @@
 @property (nonatomic, assign) AVPlayerQuality playerQuality;  /** 播放画质 */
 @property (nonatomic, assign) AVPlayerSpeed   playerSpeed;    /** 播放速率 */
 
-@property (nonatomic, strong) id              timeObserverToken; /** 使用系统这个类似定时器，不用要释放 */
+@property (nonatomic, strong) id              timeObserverToken;    /** 使用系统这个类似定时器，不用要释放 */
+@property (nonatomic, assign) BOOL            screenOrientationH;   /** 当前屏幕的方向 YES:横屏 NO:竖屏 */
 
 @end
 
@@ -50,7 +69,8 @@
     self.avPlayerLayer = [AVPlayerLayer playerLayerWithPlayer:self.avPlayer];
     
     NSLog(@"屏幕大小 %f", superView.frame.size.width);
-    self.playerView.frame = CGRectMake(0, 88, CGRectGetWidth(superView.frame), 233.0);
+    self.playerView.frame = CGRectMake(0, IOSStatusBarHeight, CGRectGetWidth(superView.frame), CGRectGetWidth(superView.frame) * 9.0 / 16.0);
+    self.screenOrientationH = NO;
     [superView addSubview:self.playerView];
     
     self.avPlayerLayer.frame = self.playerView.bounds;
@@ -60,6 +80,28 @@
     
     [self initLogic];
     [self addObserve];
+}
+
+/**
+ 当屏幕方向与上次屏幕方向一样的时，没必要变，因为影响性能
+
+ @param superView 父视图，这里一般是控制器的view
+ */
+- (void)updateSuperView:(UIView *)superView {
+    
+    if (self.screenOrientationH == isHorizontal) {
+        return ;
+    }
+    
+    if (isHorizontal == YES) {
+        self.playerView.frame = CGRectMake(44.0, 0, CGRectGetWidth(superView.frame) - 44.0 - 34.0, CGRectGetHeight(superView.frame));
+        self.screenOrientationH = YES;
+    }
+    else {
+        self.playerView.frame = CGRectMake(0, IOSStatusBarHeight, CGRectGetWidth(superView.frame),CGRectGetWidth(superView.frame) * 9.0 / 16.0);
+        self.screenOrientationH = NO;
+    }
+    self.avPlayerLayer.frame = self.playerView.bounds;
 }
 
 /** 初始化逻辑 */
@@ -90,8 +132,8 @@
     
     // 拖动进度条, 滑动位置的时间 = 滑块值(0.0 - 1.0) * 总时间
     self.playerView.footView.playSliderBlock = ^(float value) {
+        
         if (weakSelf.avPlayer.status == AVPlayerStatusReadyToPlay) {
-            
             NSTimeInterval seekDuration = value * CMTimeGetSeconds(weakSelf.avPlayer.currentItem.duration);
             CMTime seekTime = CMTimeMake(seekDuration, 1);
             [weakSelf.avPlayer seekToTime:seekTime completionHandler:^(BOOL finished) {
@@ -100,6 +142,20 @@
                 }
             }];
         }
+    };
+    
+    // 手动全屏切换
+    self.playerView.footView.fullScreenBlock = ^{
+        
+        if (weakSelf.screenOrientationH) {
+            NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+            [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
+        }
+        else {
+            NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
+            [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
+        }
+        [weakSelf.playerView.footView updateFullSceen:weakSelf.screenOrientationH];
     };
 }
 
