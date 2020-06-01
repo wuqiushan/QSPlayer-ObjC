@@ -33,6 +33,9 @@
 #define IOSTabBarHeight         49.0f
 #define IOSTabBarTotalHeight    (IOSBottomSafeHeight + IOSTabBarHeight)
 
+//#define IOSTopSafeHeight        (isIphoneXLater ? 44.f : 0.0f)
+//#define IOSBottomSafeHeight     (isIphoneXLater ? 34.0f : 0.0f)
+
 @interface QSPlayerManage()
 
 @property (nonatomic, strong) AVPlayer      *avPlayer;       /** 播放器 */
@@ -100,7 +103,14 @@
     }
     
     if (isHorizontal == YES) {
-        self.playerView.frame = CGRectMake(44.0, 0, CGRectGetWidth(superView.frame) - 44.0 - 34.0, CGRectGetHeight(superView.frame));
+        
+        CGFloat topSafeHeight = 0;
+        CGFloat bottomSafeHeight = 0;
+        if ([self isPhoneX]) {
+            topSafeHeight = 44.0f;
+            bottomSafeHeight = 34.0f;
+        }
+        self.playerView.frame = CGRectMake(topSafeHeight, 0, CGRectGetWidth(superView.frame) - topSafeHeight - bottomSafeHeight, CGRectGetHeight(superView.frame));
         self.screenOrientationH = YES;
     }
     else {
@@ -205,11 +215,15 @@
     
     // 增加耳机接入监听 指定观察[AVAudioSession sharedInstance],这些目前是多余的，主要是用到监听状态改变播放UI
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(audioRouteInOrOut:)
+                                             selector:@selector(audioRouteInOrOutAction:)
                                                  name:AVAudioSessionRouteChangeNotification
                                                object:[AVAudioSession sharedInstance]];
     
-    // 增加声音被打断监听(比如来电)
+    // 增加来电被打断监听
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(interruptionAction:)
+                                                 name:AVAudioSessionInterruptionNotification
+                                               object:[AVAudioSession sharedInstance]];
 }
 
 - (void)removeObserve {
@@ -230,10 +244,15 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:AVAudioSessionRouteChangeNotification
                                                   object:[AVAudioSession sharedInstance]];
+    
+    // 移除来电被打断监听
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVAudioSessionInterruptionNotification
+                                                  object:[AVAudioSession sharedInstance]];
 }
 
-#pragma mark - 耳机接入处理
-- (void)audioRouteInOrOut:(NSNotification *)notif {
+#pragma mark 耳机接入处理
+- (void)audioRouteInOrOutAction:(NSNotification *)notif {
     NSDictionary *dic = notif.userInfo;
     AVAudioSession *session = notif.object;
     NSInteger routeChangeReason = [[dic valueForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
@@ -252,6 +271,28 @@
     }
 }
 
+#pragma mark 来电打断
+/**
+ 如果不能打断尝试用这个方法：进入后台设置为NO, 进入前台设置为YES
+ NSError *error = nil; [[AVAudioSession sharedInstance] setActive:NO error:&error];
+ */
+- (void)interruptionAction:(NSNotification *)notif {
+    
+    NSDictionary *dic = notif.userInfo;
+    //AVAudioSession *session = notif.object;
+    NSInteger interruptionType = [[dic valueForKey:AVAudioSessionInterruptionTypeKey] integerValue];
+    if (interruptionType == AVAudioSessionInterruptionTypeBegan) {
+        self.playerState = AVPlayerStatePause;
+        [self pauseVideo];
+    }
+    else {
+        self.playerState = AVPlayerStatePlaying;
+        [self playVideo];
+    }
+    [self.playerView.middleView updatePlayUIState:self.playerState];
+}
+
+#pragma mark 播放状态/缓存条
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary<NSKeyValueChangeKey,id> *)change
@@ -318,4 +359,19 @@
     return _playerView;
 }
 
+
+//可以使用一下语句判断是否是刘海手机：
+- (BOOL)isPhoneX {
+    BOOL iPhoneX = NO;
+    if (UIDevice.currentDevice.userInterfaceIdiom != UIUserInterfaceIdiomPhone) {//判断是否是手机
+        return iPhoneX;
+    }
+    if (@available(iOS 11.0, *)) {
+        UIWindow *mainWindow = [[[UIApplication sharedApplication] delegate] window];
+        if (mainWindow.safeAreaInsets.bottom > 0.0) {
+            iPhoneX = YES;
+        }
+    }
+    return iPhoneX;
+}
 @end
