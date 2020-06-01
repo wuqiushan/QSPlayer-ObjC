@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QSPlayerManage : NSObject
 
+/** 点击返回按钮回调 */
+@property (nonatomic, copy) void(^backBlock)(void);
 
 /**
  初始化播放器

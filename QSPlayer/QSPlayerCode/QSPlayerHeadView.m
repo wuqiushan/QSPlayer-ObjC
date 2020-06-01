@@ -79,7 +79,7 @@
         _backImageView = [[UIImageView alloc] init];
         _backImageView.image = [UIImage imageNamed:@"videoLeftBack"];
         _backImageView.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backBlock)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backAction)];
         [_backImageView addGestureRecognizer:tap];
     }
     return _backImageView;
@@ -94,7 +94,7 @@
         _titleLabel.textColor = [UIColor colorWithRed:0x26/255.0 green:0x12/255.0 blue:0x0B/255.0 alpha:1.0];
         _titleLabel.backgroundColor = [UIColor clearColor];
         _titleLabel.userInteractionEnabled = YES;
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backBlock)];
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backAction)];
         [_titleLabel addGestureRecognizer:tap];
     }
     return _titleLabel;

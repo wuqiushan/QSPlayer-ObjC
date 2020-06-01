@@ -78,6 +78,12 @@
     [self.playerView.layer addSublayer:self.avPlayerLayer];
     [self.playerView setupView];
     
+    // 这里获取mp4文件大小偏小，原因待查
+//    NSArray *array = [self.avPlayerItem.asset tracksWithMediaType:AVMediaTypeVideo];
+//    for (AVAssetTrack *track in array) {
+//        NSLog(@"trackID: %d, size: %lld", track.trackID, track.totalSampleDataLength / 1024 /1024);
+//    }
+    
     [self initLogic];
     [self addObserve];
 }
@@ -144,7 +150,7 @@
         }
     };
     
-    // 手动全屏切换
+    // 手动全/半屏切换
     self.playerView.footView.fullScreenBlock = ^{
         
         if (weakSelf.screenOrientationH) {
@@ -156,6 +162,23 @@
             [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
         }
         [weakSelf.playerView.footView updateFullSceen:weakSelf.screenOrientationH];
+    };
+    
+    // 返回按钮 全屏返回成半屏，半屏返回到上一视图控制器
+    self.playerView.headView.backBlock = ^{
+        
+        if (weakSelf.screenOrientationH) {
+            // 切成半屏
+            NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+            [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
+            [weakSelf.playerView.footView updateFullSceen:weakSelf.screenOrientationH];
+        }
+        else {
+            [weakSelf removeObserve];
+            if (weakSelf.backBlock) {
+                weakSelf.backBlock();
+            }
+        }
     };
 }
 
@@ -179,6 +202,14 @@
     // 增加缓存进度监听KVO
     [self.avPlayerItem addObserver:self forKeyPath:@"loadedTimeRanges"
                            options:NSKeyValueObservingOptionNew context:nil];
+    
+    // 增加耳机接入监听 指定观察[AVAudioSession sharedInstance],这些目前是多余的，主要是用到监听状态改变播放UI
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(audioRouteInOrOut:)
+                                                 name:AVAudioSessionRouteChangeNotification
+                                               object:[AVAudioSession sharedInstance]];
+    
+    // 增加声音被打断监听(比如来电)
 }
 
 - (void)removeObserve {
@@ -194,6 +225,31 @@
     
     // 移除缓存进度监听
     [self.avPlayerItem removeObserver:self forKeyPath:@"loadedTimeRanges"];
+    
+    // 移除耳机接入监听 指定观察[AVAudioSession sharedInstance]
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:AVAudioSessionRouteChangeNotification
+                                                  object:[AVAudioSession sharedInstance]];
+}
+
+#pragma mark - 耳机接入处理
+- (void)audioRouteInOrOut:(NSNotification *)notif {
+    NSDictionary *dic = notif.userInfo;
+    AVAudioSession *session = notif.object;
+    NSInteger routeChangeReason = [[dic valueForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
+    if (routeChangeReason == AVAudioSessionRouteChangeReasonOldDeviceUnavailable) {
+        // 拔出了耳机时，要打开扬声器(拔开耳机自动停止了)
+        self.playerState = AVPlayerStatePause;
+        QSWeakSelf
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.playerView.middleView updatePlayUIState:weakSelf.playerState];
+        });
+        [session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
+    }
+    else if (routeChangeReason == AVAudioSessionRouteChangeReasonNewDeviceAvailable) {
+        // 插入了耳机时，要关闭扬声器
+        [session overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:nil];
+    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
