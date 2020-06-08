@@ -9,14 +9,16 @@
 #import "QSPlayerFootView.h"
 #import "Masonry.h"
 #import <AVFoundation/AVFoundation.h>
+#import "QSSlider.h"
 
 @interface QSPlayerFootView()
 
-@property (nonatomic, readwrite, strong) UILabel        *currentTimeLabel;
-@property (nonatomic, readwrite, strong) UILabel        *totalTimeLabel;
-@property (nonatomic, readwrite, strong) UIProgressView *buffProgressView;
-@property (nonatomic, readwrite, strong) UISlider       *playProgressSlider;
-@property (nonatomic, readwrite, strong) UIButton       *fullScreenButton;
+@property (nonatomic, readwrite, strong) UILabel        *timeLabel;          /** 播放时间 当前时长/总时长 （都有）*/
+@property (nonatomic, readwrite, strong) UIProgressView *buffProgressView;   /** 缓冲进度 （都有） */
+@property (nonatomic, readwrite, strong) QSSlider       *playProgressSlider; /** 快进滑动 （都有） */
+@property (nonatomic, readwrite, strong) UIButton       *fullScreenButton;   /** 全屏 半屏时才有 */
+@property (nonatomic, readwrite, strong) UIButton       *speedButton;        /** 速率 横屏时才有 */
+@property (nonatomic, readwrite, strong) UIButton       *qualityButton;      /** 清晰度 横屏时才有 */
 
 /** 滑块状态 YES:手动滑动中 NO:松开滑动或未滑动 */
 @property (nonatomic, readwrite, assign) BOOL isSliding;
@@ -37,45 +39,83 @@
 
 - (void)setupView {
     
-    [self addSubview: self.currentTimeLabel];
-    [self addSubview: self.totalTimeLabel];
+    [self addSubview: self.timeLabel];
     [self addSubview: self.buffProgressView];
     [self addSubview: self.playProgressSlider];
-    [self addSubview: self.fullScreenButton];
+//    [self addSubview: self.fullScreenButton];
     
-    [self.currentTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(5);
         make.centerY.equalTo(self);
         make.height.equalTo(@(40));
-        make.width.equalTo(@(50));
+        make.width.equalTo(@(80));
     }];
     
-    [self.fullScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self);
-        make.right.equalTo(self).offset(-5);
-        make.height.width.equalTo(@(32));
-    }];
-    
-    [self.totalTimeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self);
-        make.right.equalTo(self.fullScreenButton.mas_left).offset(-5);
-        make.height.equalTo(@(40));
-        make.width.equalTo(@(50));
-    }];
-    
-    [self.buffProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self);
-        make.left.equalTo(self.currentTimeLabel.mas_right).offset(5);
-        make.right.equalTo(self.totalTimeLabel.mas_left).offset(-5);
-        make.height.equalTo(@(3));
-    }];
+//    [self.fullScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.equalTo(self);
+//        make.right.equalTo(self).offset(-5);
+//        make.height.width.equalTo(@(32));
+//    }];
+//
+//    [self.buffProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.equalTo(self);
+//        make.left.equalTo(self.timeLabel.mas_right).offset(2);
+//        make.right.equalTo(self.fullScreenButton.mas_left).offset(-5);
+//        make.height.equalTo(@(3));
+//    }];
     
     [self.playProgressSlider mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self);
-        make.left.equalTo(self.currentTimeLabel.mas_right).offset(5);
-        make.right.equalTo(self.totalTimeLabel.mas_left).offset(-5);
-        make.height.equalTo(@(3));
+        make.edges.equalTo(self.buffProgressView);
     }];
+    
+    [self setScreenH: NO];
+}
+
+- (void)setScreenH:(BOOL)screenH {
+    
+    if (screenH) {
+        [self addSubview: self.speedButton];
+        [self addSubview: self.qualityButton];
+        [self.fullScreenButton removeFromSuperview];
+        
+        [self.qualityButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self);
+            make.right.equalTo(self).offset(-5);
+            make.height.mas_equalTo(40);
+            make.width.mas_equalTo(45);
+        }];
+        
+        [self.speedButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self);
+            make.right.equalTo(self.qualityButton.mas_left).offset(-2);
+            make.height.width.mas_equalTo(38);
+        }];
+        
+        [self.buffProgressView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self);
+            make.left.equalTo(self.timeLabel.mas_right).offset(2);
+            make.right.equalTo(self.speedButton.mas_left).offset(-5);
+            make.height.equalTo(@(3));
+        }];
+    }
+    else {
+        [self.speedButton removeFromSuperview];
+        [self.qualityButton removeFromSuperview];
+        [self addSubview: self.fullScreenButton];
+        
+        [self.fullScreenButton mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self);
+            make.right.equalTo(self).offset(-5);
+            make.height.width.equalTo(@(32));
+        }];
+        
+        [self.buffProgressView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self);
+            make.left.equalTo(self.timeLabel.mas_right).offset(2);
+            make.right.equalTo(self.fullScreenButton.mas_left).offset(-5);
+            make.height.equalTo(@(3));
+        }];
+    }
 }
 
 #pragma mark - 事件处理
@@ -109,8 +149,15 @@
 
 /** update播放进度条、当前时间、总时间 */
 - (void)updateCurrentSec:(NSTimeInterval)currentSec totalSec:(NSTimeInterval)totalSec {
-    self.currentTimeLabel.text = [self formatPlayTime:currentSec];
-    self.totalTimeLabel.text   = [self formatPlayTime:totalSec];
+    
+    if (totalSec < currentSec) {
+        self.timeLabel.text = @"0:00 / 0:00";
+    }
+    else {
+        NSString *currentSecStr = [self formatPlayTime:currentSec];
+        NSString *totalSecStr = [self formatPlayTime:totalSec];
+        self.timeLabel.text = [NSString stringWithFormat:@"%@ / %@", currentSecStr, totalSecStr];
+    }
     
     // 不在拖动滑块时才设置滑块值
     if (self.isSliding == NO) {
@@ -125,6 +172,7 @@
         imagStr = @"halfScreen";
     }
     [self.fullScreenButton setImage:[UIImage imageNamed:imagStr] forState:UIControlStateNormal];
+    [self setScreenH:full];
 }
 
 #pragma mark - 时间格式化
@@ -141,28 +189,16 @@
 
 #pragma mark - 懒加载
 
-- (UILabel *)currentTimeLabel {
-    if (!_currentTimeLabel) {
-        _currentTimeLabel = [[UILabel alloc] init];
-        _currentTimeLabel.backgroundColor = [UIColor clearColor];
-        _currentTimeLabel.font = [UIFont systemFontOfSize:12];
-        _currentTimeLabel.textColor = [UIColor blackColor];
-        _currentTimeLabel.textAlignment = NSTextAlignmentCenter;
-        _currentTimeLabel.text = @"00:00";
+- (UILabel *)timeLabel {
+    if (!_timeLabel) {
+        _timeLabel = [[UILabel alloc] init];
+        _timeLabel.backgroundColor = [UIColor clearColor];
+        _timeLabel.font = [UIFont systemFontOfSize:12];
+        _timeLabel.textColor = [UIColor whiteColor];
+        _timeLabel.textAlignment = NSTextAlignmentCenter;
+        _timeLabel.text = @"0:00 / 0:00";
     }
-    return _currentTimeLabel;
-}
-
-- (UILabel *)totalTimeLabel {
-    if (!_totalTimeLabel) {
-        _totalTimeLabel = [[UILabel alloc] init];
-        _totalTimeLabel.backgroundColor = [UIColor clearColor];
-        _totalTimeLabel.font = [UIFont systemFontOfSize:12];
-        _totalTimeLabel.textColor = [UIColor blackColor];
-        _totalTimeLabel.textAlignment = NSTextAlignmentCenter;
-        _totalTimeLabel.text = @"00:00";
-    }
-    return _totalTimeLabel;
+    return _timeLabel;
 }
 
 - (UIProgressView *)buffProgressView {
@@ -177,11 +213,12 @@
 
 - (UISlider *)playProgressSlider {
     if (!_playProgressSlider) {
-        _playProgressSlider = [[UISlider alloc] init];
+        _playProgressSlider = [[QSSlider alloc] init];
         _playProgressSlider.continuous = false;
         _playProgressSlider.minimumValue = 0.0;
         _playProgressSlider.maximumValue = 1.0;
-        _playProgressSlider.minimumTrackTintColor = [UIColor greenColor];
+        UIColor *minTrackColor = [UIColor colorWithRed:33.0/255.0 green:151.0/255.0 blue:216.0/255.0 alpha:1.0];
+        _playProgressSlider.minimumTrackTintColor = minTrackColor;
         _playProgressSlider.maximumTrackTintColor = [UIColor clearColor];
         
         UIImage *thumbImage = [UIImage imageNamed:@"videoPoint"];
@@ -200,6 +237,30 @@
         [_fullScreenButton addTarget:self action:@selector(fullScreenAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _fullScreenButton;
+}
+
+- (UIButton *)speedButton {
+    if (!_speedButton) {
+        _speedButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _speedButton.contentMode = UIViewContentModeCenter;
+        [_speedButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_speedButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        [_speedButton setTitle:@"倍速" forState:UIControlStateNormal];
+        _speedButton.titleLabel.font = [UIFont systemFontOfSize:12];
+    }
+    return _speedButton;
+}
+
+- (UIButton *)qualityButton {
+    if (!_qualityButton) {
+        _qualityButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _qualityButton.contentMode = UIViewContentModeCenter;
+        [_qualityButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_qualityButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        [_qualityButton setTitle:@"1080P" forState:UIControlStateNormal];
+        _qualityButton.titleLabel.font = [UIFont systemFontOfSize:12];
+    }
+    return _qualityButton;
 }
 
 @end

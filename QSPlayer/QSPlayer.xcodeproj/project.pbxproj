@@ -48,6 +48,8 @@
 		AE004A05247D1EA80084F9E9 /* videoUnLock@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE0049F3247D1EA80084F9E9 /* videoUnLock@2x.png */; };
 		AE004A06247D1EA80084F9E9 /* videoUnLock@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE0049F4247D1EA80084F9E9 /* videoUnLock@3x.png */; };
 		AE004A07247D1EA80084F9E9 /* videoShare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE0049F5247D1EA80084F9E9 /* videoShare@2x.png */; };
+		AE4C5A7E248E30B000305ADD /* QSSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4C5A7D248E30B000305ADD /* QSSlider.m */; };
+		AE4C5A87248E48A100305ADD /* QSRightPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4C5A86248E48A100305ADD /* QSRightPopView.m */; };
 		AEDF8076247E73A400E29221 /* QSVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDF8075247E73A400E29221 /* QSVideoViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -118,6 +120,10 @@
 		AE0049F4247D1EA80084F9E9 /* videoUnLock@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoUnLock@3x.png"; sourceTree = "<group>"; };
 		AE0049F5247D1EA80084F9E9 /* videoShare@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoShare@2x.png"; sourceTree = "<group>"; };
 		AE033DAB247FBB0A0048A6A1 /* QSPlayerParam.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSPlayerParam.h; sourceTree = "<group>"; };
+		AE4C5A7C248E30B000305ADD /* QSSlider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSSlider.h; sourceTree = "<group>"; };
+		AE4C5A7D248E30B000305ADD /* QSSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSSlider.m; sourceTree = "<group>"; };
+		AE4C5A85248E48A100305ADD /* QSRightPopView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSRightPopView.h; sourceTree = "<group>"; };
+		AE4C5A86248E48A100305ADD /* QSRightPopView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSRightPopView.m; sourceTree = "<group>"; };
 		AEDF8074247E73A400E29221 /* QSVideoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSVideoViewController.h; sourceTree = "<group>"; };
 		AEDF8075247E73A400E29221 /* QSVideoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSVideoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -173,6 +179,8 @@
 		AE0049AA247D14CF0084F9E9 /* QSPlayerCode */ = {
 			isa = PBXGroup;
 			children = (
+				AE4C5A80248E47ED00305ADD /* QSOperationView */,
+				AE4C5A81248E47ED00305ADD /* QSStatusView */,
 				AE0049AB247D15000084F9E9 /* QSPlayerFootView.h */,
 				AE0049AC247D15000084F9E9 /* QSPlayerFootView.m */,
 				AE0049AE247D15200084F9E9 /* QSPlayerHeadView.h */,
@@ -184,6 +192,8 @@
 				AE0049B7247D15760084F9E9 /* QSPlayerManage.h */,
 				AE0049B8247D15760084F9E9 /* QSPlayerManage.m */,
 				AE033DAB247FBB0A0048A6A1 /* QSPlayerParam.h */,
+				AE4C5A7C248E30B000305ADD /* QSSlider.h */,
+				AE4C5A7D248E30B000305ADD /* QSSlider.m */,
 			);
 			path = QSPlayerCode;
 			sourceTree = "<group>";
@@ -253,6 +263,22 @@
 				AE0049F5247D1EA80084F9E9 /* videoShare@2x.png */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		AE4C5A80248E47ED00305ADD /* QSOperationView */ = {
+			isa = PBXGroup;
+			children = (
+				AE4C5A85248E48A100305ADD /* QSRightPopView.h */,
+				AE4C5A86248E48A100305ADD /* QSRightPopView.m */,
+			);
+			path = QSOperationView;
+			sourceTree = "<group>";
+		};
+		AE4C5A81248E47ED00305ADD /* QSStatusView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = QSStatusView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -354,6 +380,7 @@
 				AE0049DD247D15E30084F9E9 /* NSArray+MASAdditions.m in Sources */,
 				AE004999247D149D0084F9E9 /* ViewController.m in Sources */,
 				AE0049AD247D15000084F9E9 /* QSPlayerFootView.m in Sources */,
+				AE4C5A7E248E30B000305ADD /* QSSlider.m in Sources */,
 				AE0049D8247D15E30084F9E9 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				AE0049E1247D15E30084F9E9 /* MASViewAttribute.m in Sources */,
 				AE0049B3247D15390084F9E9 /* QSPlayerMiddleView.m in Sources */,
@@ -367,6 +394,7 @@
 				AE0049D9247D15E30084F9E9 /* ViewController+MASAdditions.m in Sources */,
 				AE0049B9247D15760084F9E9 /* QSPlayerManage.m in Sources */,
 				AE004996247D149D0084F9E9 /* AppDelegate.m in Sources */,
+				AE4C5A87248E48A100305ADD /* QSRightPopView.m in Sources */,
 				AEDF8076247E73A400E29221 /* QSVideoViewController.m in Sources */,
 				AE0049B0247D15200084F9E9 /* QSPlayerHeadView.m in Sources */,
 			);
@@ -445,7 +473,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -498,7 +526,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

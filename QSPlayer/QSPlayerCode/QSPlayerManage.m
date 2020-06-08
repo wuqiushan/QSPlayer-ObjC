@@ -107,8 +107,15 @@
         CGFloat topSafeHeight = 0;
         CGFloat bottomSafeHeight = 0;
         if ([self isPhoneX]) {
-            topSafeHeight = 44.0f;
-            bottomSafeHeight = 34.0f;
+            // home键在右测
+            if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft) {
+                topSafeHeight = 44.0f - 10.0f;
+                bottomSafeHeight = 34.0f;
+            }
+            else {
+                topSafeHeight = 34.0f;
+                bottomSafeHeight = 44.0f - 10.0f;
+            }
         }
         self.playerView.frame = CGRectMake(topSafeHeight, 0, CGRectGetWidth(superView.frame) - topSafeHeight - bottomSafeHeight, CGRectGetHeight(superView.frame));
         self.screenOrientationH = YES;
@@ -118,6 +125,7 @@
         self.screenOrientationH = NO;
     }
     self.avPlayerLayer.frame = self.playerView.bounds;
+    [self.playerView.footView updateFullSceen:self.screenOrientationH];
 }
 
 /** 初始化逻辑 */
@@ -171,7 +179,7 @@
             NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
             [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
         }
-        [weakSelf.playerView.footView updateFullSceen:weakSelf.screenOrientationH];
+        //[weakSelf.playerView.footView updateFullSceen:weakSelf.screenOrientationH];
     };
     
     // 返回按钮 全屏返回成半屏，半屏返回到上一视图控制器
@@ -181,7 +189,7 @@
             // 切成半屏
             NSNumber *orientationTarget = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
             [[UIDevice currentDevice] setValue:orientationTarget forKey:@"orientation"];
-            [weakSelf.playerView.footView updateFullSceen:weakSelf.screenOrientationH];
+            //[weakSelf.playerView.footView updateFullSceen:weakSelf.screenOrientationH];
         }
         else {
             [weakSelf removeObserve];

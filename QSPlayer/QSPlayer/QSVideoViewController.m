@@ -18,7 +18,7 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor darkGrayColor];
     
 //    NSString *url = @"http://bos.nj.bpc.baidu.com/tieba-smallvideo/11772_3c435014fb2dd9a5fd56a57cc369f6a0.mp4";
     NSString *url = @"http://yyd-resource.oss-cn-shenzhen.aliyuncs.com/voice/mp3/20190617/20e7986a5d184220b8a52a8ddedef732.mp4";
