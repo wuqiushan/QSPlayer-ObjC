@@ -42,7 +42,6 @@
     [self addSubview: self.timeLabel];
     [self addSubview: self.buffProgressView];
     [self addSubview: self.playProgressSlider];
-//    [self addSubview: self.fullScreenButton];
     
     [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(5);
@@ -50,19 +49,6 @@
         make.height.equalTo(@(40));
         make.width.equalTo(@(80));
     }];
-    
-//    [self.fullScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerY.equalTo(self);
-//        make.right.equalTo(self).offset(-5);
-//        make.height.width.equalTo(@(32));
-//    }];
-//
-//    [self.buffProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerY.equalTo(self);
-//        make.left.equalTo(self.timeLabel.mas_right).offset(2);
-//        make.right.equalTo(self.fullScreenButton.mas_left).offset(-5);
-//        make.height.equalTo(@(3));
-//    }];
     
     [self.playProgressSlider mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.buffProgressView);
@@ -119,6 +105,18 @@
 }
 
 #pragma mark - 事件处理
+
+- (void)qualityAction {
+    if (self.qualityBlock) {
+        self.qualityBlock();
+    }
+}
+
+- (void)speedAction {
+    if (self.speedBlock) {
+        self.speedBlock();
+    }
+}
 
 - (void)fullScreenAction {
     if (self.fullScreenBlock) {
@@ -247,6 +245,7 @@
         [_speedButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         [_speedButton setTitle:@"倍速" forState:UIControlStateNormal];
         _speedButton.titleLabel.font = [UIFont systemFontOfSize:12];
+        [_speedButton addTarget:self action:@selector(speedAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _speedButton;
 }
@@ -259,6 +258,7 @@
         [_qualityButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         [_qualityButton setTitle:@"1080P" forState:UIControlStateNormal];
         _qualityButton.titleLabel.font = [UIFont systemFontOfSize:12];
+        [_qualityButton addTarget:self action:@selector(qualityAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _qualityButton;
 }

@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) QSPlayerMiddleView *middleView;
 @property (nonatomic, strong) QSPlayerFootView   *footView;
 
-//- (instancetype)init;
 - (void)setupView;
 
 @end

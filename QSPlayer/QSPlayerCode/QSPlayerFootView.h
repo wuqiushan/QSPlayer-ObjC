@@ -18,6 +18,13 @@ NS_ASSUME_NONNULL_BEGIN
 /** 点击快进滑块回调 */
 @property (nonatomic, copy) void(^playSliderBlock)(float value);
 
+/** 点击倍速回调 */
+@property (nonatomic, copy) void(^speedBlock)(void);
+
+/** 点击画质回调 */
+@property (nonatomic, copy) void(^qualityBlock)(void);
+
+
 - (instancetype)init;
 
 /** update缓冲条 */
