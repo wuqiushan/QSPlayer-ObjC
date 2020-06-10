@@ -34,27 +34,31 @@
     
     // 计算出容器视图大小以及位置
     self.frame = CGRectMake(CGRectGetWidth(rect), 0, CGRectGetWidth(rect) / 5.0, CGRectGetHeight(rect));
-    self.backgroundColor = [UIColor redColor];
+    self.backgroundColor = [UIColor grayColor];
 }
 
 
 /**
  动画弹出视图从右侧边(要实现操作1，和操作2，现顶部说明)
+ 自身容器高度占满，宽度占 1/6
+ 搭载的视图，居中显示
  
- @param subView 搭载的视图
- @param rect 父视图的frame
+ @param subView 容器视图需要搭载的子视图
+ @param rect 容器视图的父视图frame
  */
 - (void)popSubView:(UIView *)subView superView:(CGRect)rect {
     
     self.frame = CGRectMake(CGRectGetWidth(rect), 0, CGRectGetWidth(rect) / 6.0, CGRectGetHeight(rect));
-    subView.center = self.center;
+    CGFloat subX = CGRectGetWidth(self.frame) / 2.0 - CGRectGetWidth(subView.frame) / 2.0;
+    CGFloat subY = CGRectGetHeight(self.frame) / 2.0 - CGRectGetHeight(subView.frame) / 2.0;
+    subView.frame = CGRectMake(subX, subY, CGRectGetWidth(subView.frame), CGRectGetHeight(subView.frame));
     
     if (self.subviews.count == 0) {
         [self addSubview:subView];
         CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
         basicAnimation.fromValue = @(0);
         basicAnimation.toValue = @(0 - CGRectGetWidth(rect) / 6.0);
-        basicAnimation.duration = 0.2;
+        basicAnimation.duration = 0.1;
         basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
         basicAnimation.removedOnCompletion = false;
         basicAnimation.fillMode = kCAFillModeForwards;
@@ -78,7 +82,7 @@
     CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
     basicAnimation.fromValue = @(0);
     basicAnimation.toValue = @(CGRectGetWidth(self.frame));
-    basicAnimation.duration = 0.2;
+    basicAnimation.duration = 0.1;
     basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
     basicAnimation.removedOnCompletion = false;
     basicAnimation.fillMode = kCAFillModeForwards;
@@ -90,7 +94,7 @@
 #pragma mark - 动画代理
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
     
-    // 动画完成后更新视图的frame
+    // 动画完成后更新视图frame到动画后的位置上
     [self.layer removeAllAnimations];
     if (flag) {
         NSString *animKey = [anim valueForKey:@"animationKey"];

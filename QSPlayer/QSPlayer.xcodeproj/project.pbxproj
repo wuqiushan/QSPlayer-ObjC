@@ -50,6 +50,7 @@
 		AE004A07247D1EA80084F9E9 /* videoShare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE0049F5247D1EA80084F9E9 /* videoShare@2x.png */; };
 		AE4C5A7E248E30B000305ADD /* QSSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4C5A7D248E30B000305ADD /* QSSlider.m */; };
 		AE4C5A87248E48A100305ADD /* QSRightPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4C5A86248E48A100305ADD /* QSRightPopView.m */; };
+		AE86E969249073B1009B461E /* QSItemTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE86E968249073B1009B461E /* QSItemTableView.m */; };
 		AEDF8076247E73A400E29221 /* QSVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDF8075247E73A400E29221 /* QSVideoViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -124,6 +125,8 @@
 		AE4C5A7D248E30B000305ADD /* QSSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSSlider.m; sourceTree = "<group>"; };
 		AE4C5A85248E48A100305ADD /* QSRightPopView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSRightPopView.h; sourceTree = "<group>"; };
 		AE4C5A86248E48A100305ADD /* QSRightPopView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSRightPopView.m; sourceTree = "<group>"; };
+		AE86E967249073B1009B461E /* QSItemTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSItemTableView.h; sourceTree = "<group>"; };
+		AE86E968249073B1009B461E /* QSItemTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSItemTableView.m; sourceTree = "<group>"; };
 		AEDF8074247E73A400E29221 /* QSVideoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSVideoViewController.h; sourceTree = "<group>"; };
 		AEDF8075247E73A400E29221 /* QSVideoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSVideoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -270,6 +273,8 @@
 			children = (
 				AE4C5A85248E48A100305ADD /* QSRightPopView.h */,
 				AE4C5A86248E48A100305ADD /* QSRightPopView.m */,
+				AE86E967249073B1009B461E /* QSItemTableView.h */,
+				AE86E968249073B1009B461E /* QSItemTableView.m */,
 			);
 			path = QSOperationView;
 			sourceTree = "<group>";
@@ -394,6 +399,7 @@
 				AE0049D9247D15E30084F9E9 /* ViewController+MASAdditions.m in Sources */,
 				AE0049B9247D15760084F9E9 /* QSPlayerManage.m in Sources */,
 				AE004996247D149D0084F9E9 /* AppDelegate.m in Sources */,
+				AE86E969249073B1009B461E /* QSItemTableView.m in Sources */,
 				AE4C5A87248E48A100305ADD /* QSRightPopView.m in Sources */,
 				AEDF8076247E73A400E29221 /* QSVideoViewController.m in Sources */,
 				AE0049B0247D15200084F9E9 /* QSPlayerHeadView.m in Sources */,

@@ -13,8 +13,9 @@
 #import "QSPlayerMiddleView.h"
 #import "QSPlayerFootView.h"
 #import "QSRightPopView.h"
+#import "QSItemTableView.h"
 
-@interface QSPlayerView()
+@interface QSPlayerView()<UIGestureRecognizerDelegate>
 @property (nonatomic, strong) QSRightPopView *rightView;
 @end
 
@@ -49,22 +50,30 @@
 
 - (void)initActionHandle {
     
-    // 速度设置
+    // 速度视图弹出
     __weak typeof(self) weakSelf = self;
     self.footView.speedBlock = ^{
-        UIView *testView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 100)];
-        testView.backgroundColor = [UIColor whiteColor];
-        [weakSelf.rightView popSubView:testView superView:weakSelf.frame];
+        [weakSelf.rightView popSubView:weakSelf.speedView superView:weakSelf.frame];
     };
     
-    // 画质设置
+    // 画质视图弹出
     self.footView.qualityBlock = ^{
-        
+        [weakSelf.rightView popSubView:weakSelf.qualityView superView:weakSelf.frame];
     };
     
     // 本视图单击事件
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction)];
+    tapGesture.delegate = self;
     [self addGestureRecognizer:tapGesture];
+}
+
+#pragma 触摸事件的代理
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    
+    if ([touch.view isKindOfClass:[QSRightPopView class]]) {
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark - 事件处理
@@ -99,6 +108,24 @@
         _rightView = [[QSRightPopView alloc] initWithSuperViewFrame:self.frame];
     }
     return _rightView;
+}
+
+- (QSItemTableView *)speedView {
+    if (!_speedView) {
+        NSArray *speedArray = @[@"0.5倍速", @"0.75倍速", @"1.0倍速", @"1.5倍速", @"2.0倍速"];
+        _speedView = [[QSItemTableView alloc] initTableViewWithArray:speedArray];
+        _speedView.frame = CGRectMake(0, 0, 120, 250); // 高度 = 5项 * 50
+    }
+    return _speedView;
+}
+
+- (QSItemTableView *)qualityView {
+    if (!_qualityView) {
+        NSArray *qualityArray = @[@"流畅 360P", @"标清 480P", @"高清 720P", @"高清 1080P"];
+        _qualityView = [[QSItemTableView alloc] initTableViewWithArray:qualityArray];
+        _qualityView.frame = CGRectMake(0, 0, 120, 200); // 高度 = 4项 * 50
+    }
+    return _qualityView;
 }
 
 @end

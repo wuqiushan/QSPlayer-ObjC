@@ -14,6 +14,7 @@
 #import "QSPlayerHeadView.h"
 #import "QSPlayerMiddleView.h"
 #import "QSPlayerFootView.h"
+#import "QSItemTableView.h"
 
 #define IOSScreenWidth          ([UIScreen mainScreen].bounds.size.width)
 #define IOSScreenHeight         ([UIScreen mainScreen].bounds.size.height)
@@ -197,6 +198,16 @@
                 weakSelf.backBlock();
             }
         }
+    };
+    
+    // 倍速选择事件
+    self.playerView.speedView.clickItemBlock = ^(NSInteger item, NSString * _Nonnull itemTitle) {
+        NSLog(@"%@", itemTitle);
+    };
+    
+    // 画质选择事件
+    self.playerView.qualityView.clickItemBlock = ^(NSInteger item, NSString * _Nonnull itemTitle) {
+        NSLog(@"%@", itemTitle);
     };
 }
 
