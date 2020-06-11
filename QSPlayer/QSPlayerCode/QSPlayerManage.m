@@ -15,6 +15,7 @@
 #import "QSPlayerMiddleView.h"
 #import "QSPlayerFootView.h"
 #import "QSItemTableView.h"
+#import "QSRightPopView.h"
 
 #define IOSScreenWidth          ([UIScreen mainScreen].bounds.size.width)
 #define IOSScreenHeight         ([UIScreen mainScreen].bounds.size.height)
@@ -39,10 +40,10 @@
 
 @interface QSPlayerManage()
 
-@property (nonatomic, strong) AVPlayer      *avPlayer;       /** 播放器 */
-@property (nonatomic, strong) AVPlayerItem  *avPlayerItem;   /** 播放器项，可以有多个 */
-@property (nonatomic, strong) AVPlayerLayer *avPlayerLayer;  /** 播放器显示层 */
-@property (nonatomic, strong) QSPlayerView  *playerView;     /** 播放控制视图 */
+@property (nonatomic, strong) AVPlayer       *avPlayer;       /** 播放器 */
+@property (nonatomic, strong) AVPlayerItem   *avPlayerItem;   /** 播放器项，可以有多个 */
+@property (nonatomic, strong) AVPlayerLayer  *avPlayerLayer;  /** 播放器显示层 */
+@property (nonatomic, strong) QSPlayerView   *playerView;     /** 播放控制视图 */
 
 @property (nonatomic, assign) AVPlayerState   playerState;    /** 播放状态 */
 @property (nonatomic, assign) AVPlayerQuality playerQuality;  /** 播放画质 */
@@ -200,14 +201,30 @@
         }
     };
     
-    // 倍速选择事件
+    // 倍速选择事件 //NSArray *speedArray = @[@"0.5倍速", @"0.75倍速", @"1.0倍速", @"1.5倍速", @"2.0倍速"];
     self.playerView.speedView.clickItemBlock = ^(NSInteger item, NSString * _Nonnull itemTitle) {
+        
         NSLog(@"%@", itemTitle);
+        [weakSelf.playerView.rightView dismissSubView];
+        
+        NSArray *speedValueArray = @[@0.5, @0.75, @1.0, @1.5, @2.0];
+        if (item < speedValueArray.count) {
+            float rate = [speedValueArray[item] floatValue];
+            weakSelf.avPlayer.rate = rate;
+        }
     };
     
-    // 画质选择事件
+    // 画质选择事件 //NSArray *qualityArray = @[@"流畅 360P", @"标清 480P", @"高清 720P", @"高清 1080P"];
     self.playerView.qualityView.clickItemBlock = ^(NSInteger item, NSString * _Nonnull itemTitle) {
+        
         NSLog(@"%@", itemTitle);
+        [weakSelf.playerView.rightView dismissSubView];
+        
+        NSArray *qualityValueArray = @[@"360P", @"480P", @"720P", @"1080P"];
+        if (item < qualityValueArray.count) {
+            // 这个测试可以把两种url传进来，然后切换另一个链接播放，当然先得跳到指定位置上
+            //NSString *qualityValue = qualityValueArray[item];
+        }
     };
 }
 

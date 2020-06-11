@@ -7,18 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
-@class QSPlayerHeadView, QSPlayerMiddleView, QSPlayerFootView, QSItemTableView;
+@class QSPlayerHeadView, QSPlayerMiddleView, QSPlayerFootView, QSItemTableView, QSRightPopView;
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface QSPlayerView : UIView
 
-// 上中下视图
+// 上中下视图（头、中、尾视图）
 @property (nonatomic, strong) QSPlayerHeadView   *headView;
 @property (nonatomic, strong) QSPlayerMiddleView *middleView;
 @property (nonatomic, strong) QSPlayerFootView   *footView;
 
-// 右边弹出视图
+// 右边弹出视图(容器视图、倍速、画质)
+@property (nonatomic, strong) QSRightPopView     *rightView;
 @property (nonatomic, strong) QSItemTableView    *speedView;
 @property (nonatomic, strong) QSItemTableView    *qualityView;
 

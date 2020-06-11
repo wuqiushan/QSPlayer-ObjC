@@ -16,7 +16,6 @@
 #import "QSItemTableView.h"
 
 @interface QSPlayerView()<UIGestureRecognizerDelegate>
-@property (nonatomic, strong) QSRightPopView *rightView;
 @end
 
 @implementation QSPlayerView
@@ -69,8 +68,8 @@
 
 #pragma 触摸事件的代理
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    
-    if ([touch.view isKindOfClass:[QSRightPopView class]]) {
+    // 当是rightView区域，把点击事件不处理，让他自己处理
+    if ([touch.view isDescendantOfView:self.rightView]) {
         return NO;
     }
     return YES;
@@ -113,6 +112,7 @@
 - (QSItemTableView *)speedView {
     if (!_speedView) {
         NSArray *speedArray = @[@"0.5倍速", @"0.75倍速", @"1.0倍速", @"1.5倍速", @"2.0倍速"];
+        //NSArray *speedValueArray = @[@0.5, @0.75, @1.0, @1.5, @2.0];
         _speedView = [[QSItemTableView alloc] initTableViewWithArray:speedArray];
         _speedView.frame = CGRectMake(0, 0, 120, 250); // 高度 = 5项 * 50
     }
@@ -122,6 +122,7 @@
 - (QSItemTableView *)qualityView {
     if (!_qualityView) {
         NSArray *qualityArray = @[@"流畅 360P", @"标清 480P", @"高清 720P", @"高清 1080P"];
+        //NSArray *qualityValueArray = @[@"360P", @"480P", @"720P", @"1080P"];
         _qualityView = [[QSItemTableView alloc] initTableViewWithArray:qualityArray];
         _qualityView.frame = CGRectMake(0, 0, 120, 200); // 高度 = 4项 * 50
     }
