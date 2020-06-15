@@ -12,7 +12,7 @@
 @interface QSPlayerMiddleView()
 
 @property (nonatomic, strong) UIButton *playButton;
-@property (nonatomic, strong) UIButton *lockScreenButton;
+@property (nonatomic, strong) UIButton *lockScreenButton; // 这种锁不要了，只要暂停就锁住屏幕
 
 @end
 
@@ -30,18 +30,18 @@
 - (void)setupView {
     
     [self addSubview:self.playButton];
-    [self addSubview:self.lockScreenButton];
+//    [self addSubview:self.lockScreenButton];
     
     [self.playButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self);
         make.width.height.equalTo(@(40));
     }];
     
-    [self.lockScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self);
-        make.right.equalTo(self).offset(-10);
-        make.width.height.equalTo(@(32));
-    }];
+//    [self.lockScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.centerY.equalTo(self);
+//        make.right.equalTo(self).offset(-10);
+//        make.width.height.equalTo(@(32));
+//    }];
 }
 
 #pragma mark - 开放方法
@@ -92,8 +92,8 @@
     if (state == true) {
         lockImagePic = @"videoLock";
     }
-    [self.lockScreenButton setImage:[UIImage imageNamed:lockImagePic]
-                           forState:UIControlStateNormal];
+//    [self.lockScreenButton setImage:[UIImage imageNamed:lockImagePic]
+//                           forState:UIControlStateNormal];
 }
 
 #pragma mark - 事件处理

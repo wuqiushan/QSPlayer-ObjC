@@ -25,6 +25,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setupView;
 
+/** 单击事件(播放/暂停) */
+@property (nonatomic, copy) void(^playVideoBlock)(void);
+
+/** 双击事件(全屏/半屏切换) */
+@property (nonatomic, copy) void(^screenSwitchBlock)(void);
+
+/** 快进/后退事件 */
+@property (nonatomic, copy) void(^fastForwardBlock)(void);
+
 @end
 
 NS_ASSUME_NONNULL_END
