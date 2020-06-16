@@ -79,16 +79,18 @@
  */
 - (void)dismissSubView {
     
-    CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
-    basicAnimation.fromValue = @(0);
-    basicAnimation.toValue = @(CGRectGetWidth(self.frame));
-    basicAnimation.duration = 0.1;
-    basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
-    basicAnimation.removedOnCompletion = false;
-    basicAnimation.fillMode = kCAFillModeForwards;
-    basicAnimation.delegate = self;
-    [basicAnimation setValue:@"dismiss" forKey:@"animationKey"];
-    [self.layer addAnimation:basicAnimation forKey:@"key"];
+    if (self.subviews.count != 0) {
+        CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.x"];
+        basicAnimation.fromValue = @(0);
+        basicAnimation.toValue = @(CGRectGetWidth(self.frame));
+        basicAnimation.duration = 0.1;
+        basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
+        basicAnimation.removedOnCompletion = false;
+        basicAnimation.fillMode = kCAFillModeForwards;
+        basicAnimation.delegate = self;
+        [basicAnimation setValue:@"dismiss" forKey:@"animationKey"];
+        [self.layer addAnimation:basicAnimation forKey:@"key"];
+    }
 }
 
 #pragma mark - 动画代理

@@ -141,20 +141,30 @@
     [self playVideo];
     [self.playerView.middleView updatePlayUIState:self.playerState];
     
-    // 播放与停止，UI状态更新
+    /** 播放与停止，UI状态更新
+     ** 1.要控制隐藏与显示操作视图，可控制右侧弹框
+     **
+     */
     QSWeakSelf
-    [self.playerView.middleView setPlayBlock:^{
+    self.playerView.playVideoBlock = ^{
+        
         QSStrongSelf
+        // 更改播放停止、执行暂停、显示操作视图
         if (strongSelf.playerState == AVPlayerStatePlaying) {
             strongSelf.playerState = AVPlayerStatePause;
             [strongSelf pauseVideo];
+            [strongSelf.playerView showOperationView];
         }
         else {
             strongSelf.playerState = AVPlayerStatePlaying;
             [strongSelf playVideo];
+            [strongSelf.playerView delayHiddenOperationView];
         }
+        
+        // 隐藏右侧弹框、更新播放/暂停UI
+        [strongSelf.playerView.rightView dismissSubView];
         [strongSelf.playerView.middleView updatePlayUIState:strongSelf.playerState];
-    }];
+    };
     
     // 拖动进度条, 滑动位置的时间 = 滑块值(0.0 - 1.0) * 总时间
     self.playerView.footView.playSliderBlock = ^(float value) {
@@ -260,6 +270,9 @@
                                              selector:@selector(interruptionAction:)
                                                  name:AVAudioSessionInterruptionNotification
                                                object:[AVAudioSession sharedInstance]];
+    
+    // 增加播放结束监听
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playEnd) name:AVPlayerItemDidPlayToEndTimeNotification object:[self.avPlayer currentItem]];
 }
 
 - (void)removeObserve {
@@ -285,6 +298,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:AVAudioSessionInterruptionNotification
                                                   object:[AVAudioSession sharedInstance]];
+    
+    // 移除播放结束监听
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVPlayerItemDidPlayToEndTimeNotification object:[self.avPlayer currentItem]];
 }
 
 #pragma mark 耳机接入处理
@@ -340,19 +356,23 @@
         switch (status) {
             case AVPlayerItemStatusUnknown:
                 NSLog(@"status -> 未知");
+                self.playerState = AVPlayerStateFail;
                 break;
                 
             case AVPlayerItemStatusReadyToPlay:
                 NSLog(@"status -> 准备播放");
+                self.playerState = AVPlayerStateReadying;
                 break;
                 
             case AVPlayerItemStatusFailed:
                 NSLog(@"status -> 播放失败");
+                self.playerState = AVPlayerStateFail;
                 break;
                 
             default:
                 break;
         }
+        [self.playerView.middleView updatePlayUIState:self.playerState];
     }
     // 缓冲区
     else if ([keyPath isEqualToString:@"loadedTimeRanges"]) {
@@ -365,6 +385,11 @@
     }
 }
 
+#pragma mark 播放完成
+- (void)playEnd {
+    self.playerState = AVPlayerStateEnd;
+    [self.playerView.middleView updatePlayUIState:self.playerState];
+}
 
 /** 切换视频资源 */
 - (void)updateVideoUrl:(NSString *)url {

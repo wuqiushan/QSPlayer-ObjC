@@ -14,6 +14,7 @@
 #import "QSPlayerFootView.h"
 #import "QSRightPopView.h"
 #import "QSItemTableView.h"
+#import <MediaPlayer/MediaPlayer.h>
 
 @interface QSPlayerView()<UIGestureRecognizerDelegate>
 
@@ -21,6 +22,8 @@
 @property (nonatomic, strong) NSTimer *timer;
 /** 是否显示操作视图的标志位 */
 @property (nonatomic, assign) BOOL     isShowOPView;
+/** 手势用 */
+@property (nonatomic, assign) CGPoint  startLocation;
 
 @end
 
@@ -73,12 +76,13 @@
     // 中视图单击、双击、事件
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction)];
     tapGesture.delegate = self;
-    [self.middleView addGestureRecognizer:tapGesture];
+    [self addGestureRecognizer:tapGesture];
     UITapGestureRecognizer *twoTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(twoTapAction)];
     twoTapGesture.numberOfTapsRequired = 2;
-    [self.middleView addGestureRecognizer:twoTapGesture];
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction)];
-    [self.middleView addGestureRecognizer:panGesture];
+    [self addGestureRecognizer:twoTapGesture];
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
+    [self addGestureRecognizer:panGesture];
+    self.startLocation = CGPointMake(0, 0);
 }
 
 #pragma 触摸事件的代理
@@ -96,8 +100,6 @@
     if (self.playVideoBlock) {
         self.playVideoBlock();
     }
-    
-//    [self.rightView dismissSubView];
 }
 
 - (void)twoTapAction {
@@ -107,50 +109,125 @@
     }
 }
 
-- (void)panAction {
+- (void)panAction:(UIGestureRecognizer *)panGesture {
+    
+    /** 当前位置 */
+    CGPoint currentLocation = [panGesture locationInView:self];
+    /** 差值 */
+    CGPoint differLocation = CGPointMake(0, 0);
+    
+    if (panGesture.state == UIGestureRecognizerStateBegan) {
+        self.startLocation = [panGesture locationInView:self];
+    }
+    else if (panGesture.state == UIGestureRecognizerStateChanged) {
+        differLocation.x = currentLocation.x - self.startLocation.x;
+        differLocation.y = currentLocation.y - self.startLocation.y;
+        
+        /** 手势滑动与水平线夹角大于45度(根据比较竖向差值 与 横向差值 比较)，水平的话是快进快退，竖直用于音量亮度 */
+        if (fabs(differLocation.y) > fabs(differLocation.x)) {
+            // 上下滑动：左半屏调音量，右半屏调亮度
+            if (currentLocation.x < (CGRectGetWidth(self.bounds) / 2.0 - 40)) {
+                [self adjustSystemAudioVolum: (-differLocation.y / 1000.0)];
+            } else {
+                CGFloat volumBrighness = -differLocation.y / 100.0;
+                NSLog(@"亮度 == %f", (-differLocation.y / 100.0));
+                [UIScreen mainScreen].brightness = volumBrighness;
+            }
+        }
+        else { /** (手势活动路线与水平线的夹角小于45度)，说明是快进快退调节 */
+            
+        }
+    }
+    else {
+        self.startLocation = CGPointMake(0, 0);
+    }
     
     if (self.fastForwardBlock) {
         self.fastForwardBlock();
     }
 }
 
+- (void)adjustSystemAudioVolum:(CGFloat)volum {
+    
+    MPVolumeView *volumeView = [[MPVolumeView alloc] init];
+    UISlider* volumeViewSlider = nil;
+    for (UIView *view in [volumeView subviews]){
+        if ([view.class.description isEqualToString:@"MPVolumeSlider"]){
+            volumeViewSlider = (UISlider*)view;
+            break;
+        }
+    }
+    float systemVolume = volumeViewSlider.value;
+    NSLog(@"当前音量：%f", systemVolume);
+    float targetVolume = systemVolume + volum;
+    if (targetVolume > 1.0) {
+        volumeViewSlider.value = 1.0;
+    }
+    else if (targetVolume < 0.0) {
+        volumeViewSlider.value = 0.0;
+    }
+    else {
+        volumeViewSlider.value = targetVolume;
+    }
+}
+
 #pragma mark - 动画显示/隐藏操作(即：上下视图) 透明度减小(即：中视图)
 - (void)showOperationView {
     
-    CABasicAnimation *showHeadAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:@(0 - CGRectGetWidth(self.headView.frame)) toValue: @(0)];
+    if (self.isShowOPView == YES) {
+        return ;
+    }
+    
+    CGFloat headViewH = CGRectGetHeight(self.headView.frame);
+    CGFloat footViewH = CGRectGetHeight(self.footView.frame);
+    
+    CABasicAnimation *showHeadAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:-headViewH toValue: 0];
     [self.headView.layer addAnimation:showHeadAnimation forKey:@"showHeadAnimation"];
     
-    CABasicAnimation *showFootAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:@(CGRectGetWidth(self.footView.frame)) toValue: @(0)];
+    CABasicAnimation *showFootAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:footViewH toValue: 0];
     [self.footView.layer addAnimation:showFootAnimation forKey:@"showFootAnimation"];
     
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.2];
     self.middleView.alpha = 0.0;
     [UIView commitAnimations];
+    
+    self.isShowOPView = YES;
+}
+
+- (void)delayHiddenOperationView {
+    if (self.isShowOPView == YES) {
+        [self openTimer];
+    }
 }
 
 - (void)hiddenOperationView {
     
-    CABasicAnimation *showHeadAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:@(0) toValue: @(0 - CGRectGetWidth(self.headView.frame))];
+    CGFloat headViewH = CGRectGetHeight(self.headView.frame);
+    CGFloat footViewH = CGRectGetHeight(self.footView.frame);
+    
+    CABasicAnimation *showHeadAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:0 toValue: -headViewH];
     [self.headView.layer addAnimation:showHeadAnimation forKey:@"showHeadAnimation"];
     
-    CABasicAnimation *showFootAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:@(0) toValue:@(CGRectGetWidth(self.footView.frame))];
+    CABasicAnimation *showFootAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:0 toValue:footViewH];
     [self.footView.layer addAnimation:showFootAnimation forKey:@"showFootAnimation"];
     
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:0.2];
     self.middleView.alpha = 1.0;
     [UIView commitAnimations];
+    
+    self.isShowOPView = NO;
 }
 
 - (CABasicAnimation *)getAnimationWithKeyPath:(NSString *)keyPath duration:(CFTimeInterval)duration
-                                    fromValue:(id)fromValue toValue:(id)toValue {
+                                    fromValue:(CGFloat)fromValue toValue:(CGFloat)toValue {
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:keyPath];
     animation.duration = duration;
-    animation.fromValue = fromValue;
-    animation.toValue = toValue;
+    animation.fromValue = [NSNumber numberWithFloat:fromValue];
+    animation.toValue = [NSNumber numberWithFloat:toValue];
     animation.repeatCount = 1;
-    animation.repeatCount = 0.2;
+    animation.repeatDuration = 0.2;
     [animation setRemovedOnCompletion:false];
     animation.fillMode = kCAFillModeForwards;
     return animation;
@@ -164,7 +241,7 @@
             __weak typeof(self) weakSelf = self;
             _timer = [NSTimer scheduledTimerWithTimeInterval:5.0 repeats:false block:^(NSTimer * _Nonnull timer) {
                 if (weakSelf.isShowOPView == YES) {
-                    weakSelf.isShowOPView = NO;
+                    // weakSelf.isShowOPView = NO; 动画结束后再赋值
                     [weakSelf hiddenOperationView];
                 }
             }];

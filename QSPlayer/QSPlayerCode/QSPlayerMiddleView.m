@@ -4,15 +4,21 @@
 //
 //  Created by wuqiushan on 2020/5/26.
 //  Copyright © 2020 wuqiushan3@163.com. All rights reserved.
-//
+//  这里全部是中部视图的状态显示，有下面三种视图的展示，通过隐藏来使用，三个是互斥事件
 
 #import "QSPlayerMiddleView.h"
 #import "Masonry.h"
+#import "QSLabelButtonView.h"
+#import "QSLabelAnimationView.h"
 
 @interface QSPlayerMiddleView()
 
-@property (nonatomic, strong) UIButton *playButton;
-@property (nonatomic, strong) UIButton *lockScreenButton; // 这种锁不要了，只要暂停就锁住屏幕
+//@property (nonatomic, strong) UIButton *playButton;
+//@property (nonatomic, strong) UIButton *lockScreenButton; // 这种锁不要了，只要暂停就锁住屏幕
+@property (nonatomic, strong) UIImageView          *iconImgView;        // 显示播放/暂停的图片
+@property (nonatomic, strong) QSLabelButtonView    *exceptionLabel;     // "播放失败，请重试" "播放超时，请重试"
+@property (nonatomic, strong) QSLabelAnimationView *buffAnimationLabel; // "缓冲中..." 动画
+
 
 @end
 
@@ -29,19 +35,37 @@
 
 - (void)setupView {
     
-    [self addSubview:self.playButton];
-//    [self addSubview:self.lockScreenButton];
+    [self addSubview:self.iconImgView];
+    [self addSubview:self.exceptionLabel];
+    [self addSubview:self.buffAnimationLabel];
     
-    [self.playButton mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.iconImgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self);
-        make.width.height.equalTo(@(40));
+        make.width.mas_greaterThanOrEqualTo(60);
+        make.height.mas_equalTo(40);
     }];
     
-//    [self.lockScreenButton mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.centerY.equalTo(self);
-//        make.right.equalTo(self).offset(-10);
-//        make.width.height.equalTo(@(32));
-//    }];
+    [self.exceptionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self);
+        make.width.mas_greaterThanOrEqualTo(60);
+        make.height.mas_equalTo(40);
+    }];
+    
+    [self.buffAnimationLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self);
+        make.width.mas_greaterThanOrEqualTo(60);
+        make.height.mas_equalTo(40);
+    }];
+    
+    // 播放提示点击后事件
+    self.exceptionLabel.clickBlock = ^{
+//        if (state == AVPlayerStateEnd) {
+//
+//        }
+//        else if (<#expression#>) {
+//
+//        }
+    };
 }
 
 #pragma mark - 开放方法
@@ -50,83 +74,47 @@
 - (void)updatePlayUIState:(AVPlayerState)state {
     
     if (state == AVPlayerStatePlaying) {
-        [self.playButton setImage:[UIImage imageNamed:@"videoPlay"] forState:UIControlStateNormal];
+        [self.iconImgView setImage:[UIImage imageNamed:@"videoPlay"]];
+    }
+    else if (state == AVPlayerStatePause) {
+        [self.iconImgView setImage:[UIImage imageNamed:@"videoStop"]];
+    }
+    else if ((state == AVPlayerStateReadying) || (state == AVPlayerStateBuffing)) {
+        NSLog(@"显示缓冲中");
+    }
+    else if (state == AVPlayerStateEnd) {
+        [self.exceptionLabel updateTitle:@"播放结束，" buttonTitle:@"重新播放"];
     }
     else {
-        [self.playButton setImage:[UIImage imageNamed:@"videoStop"] forState:UIControlStateNormal];
+        [self.exceptionLabel updateTitle:@"播放失败，" buttonTitle:@"请重试"];
     }
-    /*
-    switch (state) {
-        case AVPlayerStateReadying:
-            // 这里可以显示重新播放
-            break;
-            
-        case AVPlayerStatePlaying:
-            // 隐藏该视图
-            break;
-            
-        case AVPlayerStatePause:
-            // 显示播放按钮
-            break;
-            
-        case AVPlayerStateBuffing:
-            // 缓冲动画
-            break;
-            
-        case AVPlayerStateEnd:
-            // 重播放
-            break;
-            
-        case AVPlayerStateFail:
-            // 隐藏该视图
-            break;
-            
-        default:
-            break;
-    } */
 }
 
-//设置锁屏状态
-- (void)updateLockUIState:(BOOL)state {
-    NSString *lockImagePic = @"videoUnLock";
-    if (state == true) {
-        lockImagePic = @"videoLock";
-    }
-//    [self.lockScreenButton setImage:[UIImage imageNamed:lockImagePic]
-//                           forState:UIControlStateNormal];
-}
 
 #pragma mark - 事件处理
-- (void)playAction {
-    if (self.playBlock) {
-        self.playBlock();
-    }
-}
 
-- (void)lockScreenAction {
-    if (self.lockScreenBlock) {
-        self.lockScreenBlock();
-    }
-}
 
 #pragma mark - 懒加载
-
-- (UIButton *)playButton {
-    if (!_playButton) {
-        _playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_playButton setImage:[UIImage imageNamed:@"videoPlay"] forState:UIControlStateNormal];
-        [_playButton addTarget:self action:@selector(playAction) forControlEvents:UIControlEventTouchUpInside];
+- (UIImageView *)iconImgView {
+    if (!_iconImgView) {
+        _iconImgView = [[UIImageView alloc] init];
+        _iconImgView.image = [UIImage imageNamed:@"videoPlay"];
     }
-    return _playButton;
+    return _iconImgView;
 }
 
-- (UIButton *)lockScreenButton {
-    if (!_lockScreenButton) {
-        _lockScreenButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [_lockScreenButton setImage:[UIImage imageNamed:@"videoUnLock"] forState:UIControlStateNormal];
-        [_lockScreenButton addTarget:self action:@selector(lockScreenAction) forControlEvents:UIControlEventTouchUpInside];
+- (QSLabelButtonView *)exceptionLabel {
+    if (!_exceptionLabel) {
+        _exceptionLabel = [[QSLabelButtonView alloc] init];
     }
-    return _lockScreenButton;
+    return _exceptionLabel;
+}
+
+- (QSLabelAnimationView *)buffAnimationLabel {
+    if (!_buffAnimationLabel) {
+        _buffAnimationLabel = [[QSLabelAnimationView alloc] init];
+    }
+    return _buffAnimationLabel;
 }
 
 @end

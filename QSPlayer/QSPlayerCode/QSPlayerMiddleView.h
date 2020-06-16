@@ -12,13 +12,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QSPlayerMiddleView : UIView
 
-/** 点击播放/暂停按钮回调 */
-@property (nonatomic, copy) void(^playBlock)(void);
-
-/** 点击锁屏/解锁按钮回调 */
-@property (nonatomic, copy) void(^lockScreenBlock)(void);
-
-
 - (instancetype)init;
 
 /**
@@ -28,12 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (void)updatePlayUIState:(AVPlayerState)state;
 
-/**
- 更新锁屏UI状态
-
- @param state YES：锁屏状态(即锁定屏幕各种按钮) NO：不锁屏
- */
-- (void)updateLockUIState:(BOOL)state;
 
 @end
 

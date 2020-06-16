@@ -34,6 +34,11 @@ NS_ASSUME_NONNULL_BEGIN
 /** 快进/后退事件 */
 @property (nonatomic, copy) void(^fastForwardBlock)(void);
 
+
+// 动画显示/隐藏操作(即：上下视图) 透明度减小(即：中视图)
+- (void)showOperationView;
+- (void)delayHiddenOperationView;
+
 @end
 
 NS_ASSUME_NONNULL_END
