@@ -50,6 +50,9 @@
 		AE004A07247D1EA80084F9E9 /* videoShare@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = AE0049F5247D1EA80084F9E9 /* videoShare@2x.png */; };
 		AE4C5A7E248E30B000305ADD /* QSSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4C5A7D248E30B000305ADD /* QSSlider.m */; };
 		AE4C5A87248E48A100305ADD /* QSRightPopView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE4C5A86248E48A100305ADD /* QSRightPopView.m */; };
+		AE5299F42498C39700B48BD2 /* QSLabelButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5299F32498C39700B48BD2 /* QSLabelButtonView.m */; };
+		AE5299F72498C3C600B48BD2 /* QSLabelAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5299F62498C3C600B48BD2 /* QSLabelAnimationView.m */; };
+		AE5299FB2498C7C500B48BD2 /* NSString+iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5299FA2498C7C500B48BD2 /* NSString+iOS.m */; };
 		AE86E969249073B1009B461E /* QSItemTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE86E968249073B1009B461E /* QSItemTableView.m */; };
 		AEDF8076247E73A400E29221 /* QSVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDF8075247E73A400E29221 /* QSVideoViewController.m */; };
 /* End PBXBuildFile section */
@@ -125,6 +128,12 @@
 		AE4C5A7D248E30B000305ADD /* QSSlider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSSlider.m; sourceTree = "<group>"; };
 		AE4C5A85248E48A100305ADD /* QSRightPopView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSRightPopView.h; sourceTree = "<group>"; };
 		AE4C5A86248E48A100305ADD /* QSRightPopView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSRightPopView.m; sourceTree = "<group>"; };
+		AE5299F22498C39700B48BD2 /* QSLabelButtonView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSLabelButtonView.h; sourceTree = "<group>"; };
+		AE5299F32498C39700B48BD2 /* QSLabelButtonView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSLabelButtonView.m; sourceTree = "<group>"; };
+		AE5299F52498C3C600B48BD2 /* QSLabelAnimationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSLabelAnimationView.h; sourceTree = "<group>"; };
+		AE5299F62498C3C600B48BD2 /* QSLabelAnimationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSLabelAnimationView.m; sourceTree = "<group>"; };
+		AE5299F92498C7C500B48BD2 /* NSString+iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+iOS.h"; sourceTree = "<group>"; };
+		AE5299FA2498C7C500B48BD2 /* NSString+iOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+iOS.m"; sourceTree = "<group>"; };
 		AE86E967249073B1009B461E /* QSItemTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSItemTableView.h; sourceTree = "<group>"; };
 		AE86E968249073B1009B461E /* QSItemTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSItemTableView.m; sourceTree = "<group>"; };
 		AEDF8074247E73A400E29221 /* QSVideoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSVideoViewController.h; sourceTree = "<group>"; };
@@ -182,6 +191,7 @@
 		AE0049AA247D14CF0084F9E9 /* QSPlayerCode */ = {
 			isa = PBXGroup;
 			children = (
+				AE5299F82498C7C500B48BD2 /* QSTools */,
 				AE4C5A80248E47ED00305ADD /* QSOperationView */,
 				AE4C5A81248E47ED00305ADD /* QSStatusView */,
 				AE0049AB247D15000084F9E9 /* QSPlayerFootView.h */,
@@ -282,8 +292,21 @@
 		AE4C5A81248E47ED00305ADD /* QSStatusView */ = {
 			isa = PBXGroup;
 			children = (
+				AE5299F22498C39700B48BD2 /* QSLabelButtonView.h */,
+				AE5299F32498C39700B48BD2 /* QSLabelButtonView.m */,
+				AE5299F52498C3C600B48BD2 /* QSLabelAnimationView.h */,
+				AE5299F62498C3C600B48BD2 /* QSLabelAnimationView.m */,
 			);
 			path = QSStatusView;
+			sourceTree = "<group>";
+		};
+		AE5299F82498C7C500B48BD2 /* QSTools */ = {
+			isa = PBXGroup;
+			children = (
+				AE5299F92498C7C500B48BD2 /* NSString+iOS.h */,
+				AE5299FA2498C7C500B48BD2 /* NSString+iOS.m */,
+			);
+			path = QSTools;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -388,9 +411,12 @@
 				AE4C5A7E248E30B000305ADD /* QSSlider.m in Sources */,
 				AE0049D8247D15E30084F9E9 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				AE0049E1247D15E30084F9E9 /* MASViewAttribute.m in Sources */,
+				AE5299F42498C39700B48BD2 /* QSLabelButtonView.m in Sources */,
+				AE5299F72498C3C600B48BD2 /* QSLabelAnimationView.m in Sources */,
 				AE0049B3247D15390084F9E9 /* QSPlayerMiddleView.m in Sources */,
 				AE0049E0247D15E30084F9E9 /* MASViewConstraint.m in Sources */,
 				AE0049B6247D15450084F9E9 /* QSPlayerView.m in Sources */,
+				AE5299FB2498C7C500B48BD2 /* NSString+iOS.m in Sources */,
 				AE0049DB247D15E30084F9E9 /* MASConstraintMaker.m in Sources */,
 				AE0049DC247D15E30084F9E9 /* MASLayoutConstraint.m in Sources */,
 				AE0049DE247D15E30084F9E9 /* View+MASAdditions.m in Sources */,
