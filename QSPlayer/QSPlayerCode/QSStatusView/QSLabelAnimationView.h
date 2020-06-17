@@ -12,6 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface QSLabelAnimationView : UIView
 
+- (instancetype)init;
+
+// 更新显示内容
+- (void)updateTitle:(NSString *)title;
+
 @end
 
 NS_ASSUME_NONNULL_END

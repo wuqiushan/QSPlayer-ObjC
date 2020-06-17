@@ -13,12 +13,7 @@
 
 @interface QSPlayerMiddleView()
 
-//@property (nonatomic, strong) UIButton *playButton;
-//@property (nonatomic, strong) UIButton *lockScreenButton; // 这种锁不要了，只要暂停就锁住屏幕
-@property (nonatomic, strong) UIImageView          *iconImgView;        // 显示播放/暂停的图片
-@property (nonatomic, strong) QSLabelButtonView    *exceptionLabel;     // "播放失败，请重试" "播放超时，请重试"
-@property (nonatomic, strong) QSLabelAnimationView *buffAnimationLabel; // "缓冲中..." 动画
-
+//@property (nonatomic, assign) OnlyShowViewType showType;
 
 @end
 
@@ -41,7 +36,7 @@
     
     [self.iconImgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self);
-        make.width.mas_greaterThanOrEqualTo(60);
+        make.width.mas_greaterThanOrEqualTo(40);
         make.height.mas_equalTo(40);
     }];
     
@@ -56,37 +51,39 @@
         make.width.mas_greaterThanOrEqualTo(60);
         make.height.mas_equalTo(40);
     }];
-    
-    // 播放提示点击后事件
-    self.exceptionLabel.clickBlock = ^{
-//        if (state == AVPlayerStateEnd) {
-//
-//        }
-//        else if (<#expression#>) {
-//
-//        }
-    };
 }
 
 #pragma mark - 开放方法
-
-//设置播放状态(目前先做两种状态)
+// 通过状态来展示UI状态，因为UI状态显示结构有多种，所以选择性的隐藏
 - (void)updatePlayUIState:(AVPlayerState)state {
+    
+    self.iconImgView.hidden = YES;
+    self.exceptionLabel.hidden = YES;
+    self.buffAnimationLabel.hidden = YES;
     
     if (state == AVPlayerStatePlaying) {
         [self.iconImgView setImage:[UIImage imageNamed:@"videoPlay"]];
+        self.iconImgView.hidden = NO;
     }
     else if (state == AVPlayerStatePause) {
         [self.iconImgView setImage:[UIImage imageNamed:@"videoStop"]];
+        self.iconImgView.hidden = NO;
     }
-    else if ((state == AVPlayerStateReadying) || (state == AVPlayerStateBuffing)) {
-        NSLog(@"显示缓冲中");
+    else if (state == AVPlayerStateReadying) {
+        [self.buffAnimationLabel updateTitle:@"加载中..."];
+        self.buffAnimationLabel.hidden = NO;
+    }
+    else if (state == AVPlayerStateBuffing) {
+        [self.buffAnimationLabel updateTitle:@"缓冲中..."];
+        self.buffAnimationLabel.hidden = NO;
     }
     else if (state == AVPlayerStateEnd) {
         [self.exceptionLabel updateTitle:@"播放结束，" buttonTitle:@"重新播放"];
+        self.exceptionLabel.hidden = NO;
     }
     else {
         [self.exceptionLabel updateTitle:@"播放失败，" buttonTitle:@"请重试"];
+        self.exceptionLabel.hidden = NO;
     }
 }
 
