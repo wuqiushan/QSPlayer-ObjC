@@ -17,7 +17,6 @@
 		AE0049B0247D15200084F9E9 /* QSPlayerHeadView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE0049AF247D15200084F9E9 /* QSPlayerHeadView.m */; };
 		AE0049B3247D15390084F9E9 /* QSPlayerMiddleView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE0049B2247D15390084F9E9 /* QSPlayerMiddleView.m */; };
 		AE0049B6247D15450084F9E9 /* QSPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE0049B5247D15450084F9E9 /* QSPlayerView.m */; };
-		AE0049B9247D15760084F9E9 /* QSPlayerManage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE0049B8247D15760084F9E9 /* QSPlayerManage.m */; };
 		AE0049D7247D15E30084F9E9 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = AE0049BB247D15E30084F9E9 /* LICENSE */; };
 		AE0049D8247D15E30084F9E9 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AE0049BE247D15E30084F9E9 /* NSLayoutConstraint+MASDebugAdditions.m */; };
 		AE0049D9247D15E30084F9E9 /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = AE0049C7247D15E30084F9E9 /* ViewController+MASAdditions.m */; };
@@ -54,6 +53,8 @@
 		AE5299F72498C3C600B48BD2 /* QSLabelAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5299F62498C3C600B48BD2 /* QSLabelAnimationView.m */; };
 		AE5299FB2498C7C500B48BD2 /* NSString+iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = AE5299FA2498C7C500B48BD2 /* NSString+iOS.m */; };
 		AE86E969249073B1009B461E /* QSItemTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = AE86E968249073B1009B461E /* QSItemTableView.m */; };
+		AE9495702499FADB006060C1 /* QSPlayerManageBase.m in Sources */ = {isa = PBXBuildFile; fileRef = AE94956F2499FADB006060C1 /* QSPlayerManageBase.m */; };
+		AE9495732499FBC1006060C1 /* QSPlayerManage.m in Sources */ = {isa = PBXBuildFile; fileRef = AE9495722499FBC1006060C1 /* QSPlayerManage.m */; };
 		AEDF8076247E73A400E29221 /* QSVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEDF8075247E73A400E29221 /* QSVideoViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -76,8 +77,6 @@
 		AE0049B2247D15390084F9E9 /* QSPlayerMiddleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSPlayerMiddleView.m; sourceTree = "<group>"; };
 		AE0049B4247D15450084F9E9 /* QSPlayerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSPlayerView.h; sourceTree = "<group>"; };
 		AE0049B5247D15450084F9E9 /* QSPlayerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSPlayerView.m; sourceTree = "<group>"; };
-		AE0049B7247D15760084F9E9 /* QSPlayerManage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSPlayerManage.h; sourceTree = "<group>"; };
-		AE0049B8247D15760084F9E9 /* QSPlayerManage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSPlayerManage.m; sourceTree = "<group>"; };
 		AE0049BB247D15E30084F9E9 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		AE0049BD247D15E30084F9E9 /* MASCompositeConstraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASCompositeConstraint.h; sourceTree = "<group>"; };
 		AE0049BE247D15E30084F9E9 /* NSLayoutConstraint+MASDebugAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSLayoutConstraint+MASDebugAdditions.m"; sourceTree = "<group>"; };
@@ -136,6 +135,10 @@
 		AE5299FA2498C7C500B48BD2 /* NSString+iOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+iOS.m"; sourceTree = "<group>"; };
 		AE86E967249073B1009B461E /* QSItemTableView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSItemTableView.h; sourceTree = "<group>"; };
 		AE86E968249073B1009B461E /* QSItemTableView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSItemTableView.m; sourceTree = "<group>"; };
+		AE94956E2499FADB006060C1 /* QSPlayerManageBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSPlayerManageBase.h; sourceTree = "<group>"; };
+		AE94956F2499FADB006060C1 /* QSPlayerManageBase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSPlayerManageBase.m; sourceTree = "<group>"; };
+		AE9495712499FBC1006060C1 /* QSPlayerManage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSPlayerManage.h; sourceTree = "<group>"; };
+		AE9495722499FBC1006060C1 /* QSPlayerManage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSPlayerManage.m; sourceTree = "<group>"; };
 		AEDF8074247E73A400E29221 /* QSVideoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QSVideoViewController.h; sourceTree = "<group>"; };
 		AEDF8075247E73A400E29221 /* QSVideoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QSVideoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -202,8 +205,10 @@
 				AE0049B2247D15390084F9E9 /* QSPlayerMiddleView.m */,
 				AE0049B4247D15450084F9E9 /* QSPlayerView.h */,
 				AE0049B5247D15450084F9E9 /* QSPlayerView.m */,
-				AE0049B7247D15760084F9E9 /* QSPlayerManage.h */,
-				AE0049B8247D15760084F9E9 /* QSPlayerManage.m */,
+				AE94956E2499FADB006060C1 /* QSPlayerManageBase.h */,
+				AE94956F2499FADB006060C1 /* QSPlayerManageBase.m */,
+				AE9495712499FBC1006060C1 /* QSPlayerManage.h */,
+				AE9495722499FBC1006060C1 /* QSPlayerManage.m */,
 				AE033DAB247FBB0A0048A6A1 /* QSPlayerParam.h */,
 				AE4C5A7C248E30B000305ADD /* QSSlider.h */,
 				AE4C5A7D248E30B000305ADD /* QSSlider.m */,
@@ -411,6 +416,7 @@
 				AE4C5A7E248E30B000305ADD /* QSSlider.m in Sources */,
 				AE0049D8247D15E30084F9E9 /* NSLayoutConstraint+MASDebugAdditions.m in Sources */,
 				AE0049E1247D15E30084F9E9 /* MASViewAttribute.m in Sources */,
+				AE9495732499FBC1006060C1 /* QSPlayerManage.m in Sources */,
 				AE5299F42498C39700B48BD2 /* QSLabelButtonView.m in Sources */,
 				AE5299F72498C3C600B48BD2 /* QSLabelAnimationView.m in Sources */,
 				AE0049B3247D15390084F9E9 /* QSPlayerMiddleView.m in Sources */,
@@ -423,9 +429,9 @@
 				AE0049DA247D15E30084F9E9 /* MASCompositeConstraint.m in Sources */,
 				AE0049A4247D149F0084F9E9 /* main.m in Sources */,
 				AE0049D9247D15E30084F9E9 /* ViewController+MASAdditions.m in Sources */,
-				AE0049B9247D15760084F9E9 /* QSPlayerManage.m in Sources */,
 				AE004996247D149D0084F9E9 /* AppDelegate.m in Sources */,
 				AE86E969249073B1009B461E /* QSItemTableView.m in Sources */,
+				AE9495702499FADB006060C1 /* QSPlayerManageBase.m in Sources */,
 				AE4C5A87248E48A100305ADD /* QSRightPopView.m in Sources */,
 				AEDF8076247E73A400E29221 /* QSVideoViewController.m in Sources */,
 				AE0049B0247D15200084F9E9 /* QSPlayerHeadView.m in Sources */,
