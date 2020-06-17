@@ -192,10 +192,10 @@
     CABasicAnimation *showFootAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:footViewH toValue: 0];
     [self.footView.layer addAnimation:showFootAnimation forKey:@"showFootAnimation"];
     
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.2];
-    self.middleView.alpha = 0.0;
-    [UIView commitAnimations];
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationDuration:0.2];
+//    self.middleView.alpha = 0.0;
+//    [UIView commitAnimations];
     
     self.isShowOPView = YES;
 }
@@ -217,10 +217,10 @@
     CABasicAnimation *showFootAnimation = [self getAnimationWithKeyPath:@"transform.translation.y" duration:0.2 fromValue:0 toValue:footViewH];
     [self.footView.layer addAnimation:showFootAnimation forKey:@"showFootAnimation"];
     
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.2];
-    self.middleView.alpha = 1.0;
-    [UIView commitAnimations];
+//    [UIView beginAnimations:nil context:nil];
+//    [UIView setAnimationDuration:0.2];
+//    self.middleView.alpha = 1.0;
+//    [UIView commitAnimations];
     
     self.isShowOPView = NO;
 }

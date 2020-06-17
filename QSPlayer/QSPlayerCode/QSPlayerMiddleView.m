@@ -12,9 +12,7 @@
 #import "QSLabelAnimationView.h"
 
 @interface QSPlayerMiddleView()
-
-//@property (nonatomic, assign) OnlyShowViewType showType;
-
+@property (nonatomic, assign) AVPlayerState recordState; // 记录上一次的状态
 @end
 
 @implementation QSPlayerMiddleView
@@ -24,6 +22,7 @@
     self = [super init];
     if (self) {
         [self setupView];
+        self.recordState = AVPlayerStateEnd;
     }
     return self;
 }
@@ -51,11 +50,20 @@
         make.width.mas_greaterThanOrEqualTo(60);
         make.height.mas_equalTo(40);
     }];
+    
+    self.iconImgView.hidden = YES;
+    self.exceptionLabel.hidden = YES;
+    self.buffAnimationLabel.hidden = YES;
 }
 
 #pragma mark - 开放方法
 // 通过状态来展示UI状态，因为UI状态显示结构有多种，所以选择性的隐藏
 - (void)updatePlayUIState:(AVPlayerState)state {
+    
+    if (state == self.recordState) {
+        return ;
+    }
+    self.recordState = state;
     
     self.iconImgView.hidden = YES;
     self.exceptionLabel.hidden = YES;
@@ -64,13 +72,20 @@
     if (state == AVPlayerStatePlaying) {
         [self.iconImgView setImage:[UIImage imageNamed:@"videoPlay"]];
         self.iconImgView.hidden = NO;
+        
+        // 在点了播放后，这个logo马上动画消失，然后0.3后复原
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.2];
+        self.iconImgView.alpha = 0.0;
+        [UIView commitAnimations];
+        [self performSelector:@selector(delayShowIconImageView) withObject:self afterDelay:0.3];
     }
     else if (state == AVPlayerStatePause) {
         [self.iconImgView setImage:[UIImage imageNamed:@"videoStop"]];
         self.iconImgView.hidden = NO;
     }
     else if (state == AVPlayerStateReadying) {
-        [self.buffAnimationLabel updateTitle:@"加载中..."];
+        [self.buffAnimationLabel updateTitle:@"准备中..."];
         self.buffAnimationLabel.hidden = NO;
     }
     else if (state == AVPlayerStateBuffing) {
@@ -87,6 +102,13 @@
     }
 }
 
+// 复原iconImgView的显示，只是把它隐藏掉了
+- (void)delayShowIconImageView {
+    if (self.iconImgView) {
+        self.iconImgView.hidden = YES;
+        self.iconImgView.alpha = 1.0;
+    }
+}
 
 #pragma mark - 事件处理
 

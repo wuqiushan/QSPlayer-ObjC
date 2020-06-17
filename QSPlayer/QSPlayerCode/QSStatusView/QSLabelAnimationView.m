@@ -50,7 +50,7 @@
     if (!_titleLabel) {
         _titleLabel = [[UILabel alloc] init];
         _titleLabel.font = [UIFont systemFontOfSize:12];
-        _titleLabel.textColor = [UIColor lightGrayColor];
+        _titleLabel.textColor = [UIColor whiteColor];
         _titleLabel.textAlignment = NSTextAlignmentCenter;
         _titleLabel.text = @"缓冲中...";
     }
