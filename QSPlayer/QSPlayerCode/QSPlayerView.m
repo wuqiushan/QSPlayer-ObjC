@@ -109,6 +109,11 @@
     }
 }
 
+- (void)dealloc
+{
+    NSLog(@"%s", __func__);
+}
+
 - (void)panAction:(UIGestureRecognizer *)panGesture {
     
     /** 当前位置 */
@@ -241,7 +246,6 @@
             __weak typeof(self) weakSelf = self;
             _timer = [NSTimer scheduledTimerWithTimeInterval:5.0 repeats:false block:^(NSTimer * _Nonnull timer) {
                 if (weakSelf.isShowOPView == YES) {
-                    // weakSelf.isShowOPView = NO; 动画结束后再赋值
                     [weakSelf hiddenOperationView];
                 }
             }];

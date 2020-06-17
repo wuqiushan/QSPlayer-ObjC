@@ -16,6 +16,7 @@
 #import "QSPlayerFootView.h"
 #import "QSItemTableView.h"
 #import "QSRightPopView.h"
+#import "QSLabelButtonView.h"
 
 #define IOSScreenWidth          ([UIScreen mainScreen].bounds.size.width)
 #define IOSScreenHeight         ([UIScreen mainScreen].bounds.size.height)
@@ -134,16 +135,14 @@
 - (void)initLogic {
     
     // 初始化参数以及UI
-    self.playerState   = AVPlayerStatePlaying;
+    self.playerState   = AVPlayerStateReadying;
     self.playerQuality = AVPlayerQualitySmooth;
     self.playerSpeed   = AVPlayerSpeed1_0;
-    
-    [self playVideo];
     [self.playerView.middleView updatePlayUIState:self.playerState];
     
     /** 播放与停止，UI状态更新
-     ** 1.要控制隐藏与显示操作视图，可控制右侧弹框
-     **
+     ** 状态1：更改播放停止、执行暂停、显示操作视图
+     ** 状态2：隐藏右侧弹框、更新播放/暂停UI
      */
     QSWeakSelf
     self.playerView.playVideoBlock = ^{
@@ -234,6 +233,21 @@
         if (item < qualityValueArray.count) {
             // 这个测试可以把两种url传进来，然后切换另一个链接播放，当然先得跳到指定位置上
             //NSString *qualityValue = qualityValueArray[item];
+        }
+    };
+    
+    // 各种异常播放提示后，点击事件 (重新播放，请重试)
+    self.playerView.middleView.exceptionLabel.clickBlock = ^{
+        if (weakSelf.playerState == AVPlayerStateEnd) {
+            CMTime seekTime = CMTimeMake(0, 1);
+            [weakSelf.avPlayer seekToTime:seekTime completionHandler:^(BOOL finished) {
+                if (finished) {
+                    NSLog(@"重新播放拖动完成");
+                }
+            }];
+        }
+        else if(weakSelf.playerState == AVPlayerStateFail) {
+            
         }
     };
 }
@@ -360,8 +374,11 @@
                 break;
                 
             case AVPlayerItemStatusReadyToPlay:
-                NSLog(@"status -> 准备播放");
-                self.playerState = AVPlayerStateReadying;
+                // 当前状态是 “加载中...”或“缓冲中...” 这个时候直接播放
+                if ((self.playerState == AVPlayerStateReadying) || (self.playerState == AVPlayerStateBuffing)) {
+                    [self playVideo];
+                    self.playerState = AVPlayerStatePlaying;
+                }
                 break;
                 
             case AVPlayerItemStatusFailed:
